@@ -154,21 +154,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Secondary Sidebar Panel matching target screenshot */}
       <aside className="w-64 bg-[#09090b] flex flex-col h-screen overflow-hidden">
         {/* Section Header: ACTIVE CASES */}
-        <div className="p-3.5 border-b border-[#27272a] flex items-center justify-between">
-          <span className="text-[10px] font-black uppercase tracking-wider text-zinc-400 font-mono">
-            ACTIVE CASES
-          </span>
-          <button
-            onClick={onNewCaseModal}
-            className="text-zinc-400 hover:text-white p-1 transition rounded-md hover:bg-[#18181b] cursor-pointer"
-            title="Create new case"
-          >
-            <Plus className="w-3.5 h-3.5" />
-          </button>
+        <div className="p-3 border-b border-[#27272a] flex items-center justify-between bg-[#0d0e14]">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] font-black uppercase tracking-wider text-zinc-400 font-mono">
+              ACTIVE CASES
+            </span>
+            <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">
+              {investigations.length}
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={onNewCaseModal}
+              className="text-zinc-400 hover:text-white p-1 transition rounded hover:bg-[#18181b] cursor-pointer"
+              title="Create target investigation"
+            >
+              <Plus className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
 
         {/* Active Cases Scrollable List */}
-        <div className="p-3 space-y-2.5 flex-1 overflow-y-auto min-h-0 scrollbar-thin">
+        <div className="p-2.5 space-y-2 flex-1 overflow-y-auto min-h-0 scrollbar-thin">
           {investigations.length === 0 ? (
             <div className="text-center py-8 text-zinc-500 text-xs font-mono">
               No active cases.<br />Click "+" to add one.
@@ -185,15 +192,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onSelectCase(inv.id);
                     onSelectNav('workspace');
                   }}
-                  className={`group p-3 rounded-lg cursor-pointer transition-all border relative ${
+                  className={`group p-2.5 rounded-lg cursor-pointer transition-all border relative ${
                     isActive && currentView === 'workspace'
                       ? 'bg-[#18181b] border-[#3f3f46] text-white shadow-sm'
                       : 'bg-[#121214] border-[#27272a] text-zinc-400 hover:bg-[#18181b]/70 hover:text-zinc-200'
                   }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-bold truncate pr-2 text-white font-mono">{inv.title}</h3>
-                    <div className="flex items-center gap-1.5 shrink-0">
+                  <div className="flex items-start justify-between gap-1">
+                    <h3 className="text-xs font-bold truncate text-white font-mono flex-1">{inv.title}</h3>
+                    <div className="flex items-center gap-1 shrink-0 pt-0.5">
                       {hasAlert && <AlertTriangle className="w-3 h-3 text-amber-400" />}
                       <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                     </div>
@@ -208,9 +215,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        onDeleteCase(inv.id);
+                        if (window.confirm(`Are you sure you want to delete investigation "${inv.title}"?`)) {
+                          onDeleteCase(inv.id);
+                        }
                       }}
-                      className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-rose-400 p-0.5 transition cursor-pointer"
+                      className="opacity-70 group-hover:opacity-100 text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 p-1 rounded transition cursor-pointer"
                       title="Delete case"
                     >
                       <Trash2 className="w-3.5 h-3.5" />

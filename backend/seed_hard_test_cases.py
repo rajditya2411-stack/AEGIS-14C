@@ -41,9 +41,32 @@ COMPLAINT_SOPHISTICATED_2 = (
     "Immediate debit freeze notice required under Section 106 BNSS and Section 66D IT Act."
 )
 
+COMPLAINT_SOPHISTICATED_3 = (
+    "CRITICAL ESCALATION - ₹85,00,000 MULTI-TIER INSTITUTIONAL PRE-IPO STOCK MANIPULATION & STRUCTURED MULE NETWORK. "
+    "Complainant Vikramaditya Singhania (Managing Director, Apex Pharma Logistics, Ahmedabad) was added into an exclusive "
+    "VIP WhatsApp group 'SEBI Institutional Desk - A Grade Allocations' by admin +91 97120 44910 posing as Chief Investment Officer of Morgan Stanley India. "
+    "He was guided to register on fake institutional settlement portal https://institutional-sebi-vip.live/terminal.php. "
+    "Fraudsters demonstrated synthetic live trading dashboards showing 300% fictitious profits in upcoming defense tech IPO allotment. "
+    "Complainant was instructed to execute RTGS transfers of ₹85,00,000 across 4 tranches to purported SEBI clearing escrow accounts: "
+    "primary VPA sebi.allotment.settlement@icici (A/C: 50200081928371, IFSC: HDFC0000502), layering account smurf.layer.delta@paytm, "
+    "and secondary shell account corporate.treasury.nodal@oksbi. When funds withdrawal was initiated, syndicate demanded ₹12,75,000 "
+    "as 'SEBI Advance Tax & Currency Clearance Fee'. Requesting immediate Section 106 BNSS Bank Debit Freeze Notice to HDFC Bank, ICICI Bank, and Paytm Payments Bank."
+)
+
+COMPLAINT_SOPHISTICATED_4 = (
+    "EMERGENCY CYBER FIR - ₹35,00,000 CORPORATE RTGS HIJACK VIA AEPS BIOMETRIC CLONING & SIM-SWAP INTERCEPTION. "
+    "Complainant Meera Nambiar (Chief Financial Officer, Horizon Infotech Solutions, Bangalore) reported unauthorized drainage "
+    "of corporate operational funds totaling ₹35,00,000 from current account. On 23-Aug-2026, complainant's registered mobile device "
+    "received SMS header AD-UIDAIO advising mandatory biometric re-KYC via spoofed portal https://aeps-aadhaar-portal.net/biometric-sync.php. "
+    "The portal prompted download of 'AePS-Biometric-Sync.apk' (SHA256: c8f1e2d3b4a59687e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3). "
+    "Simultaneously, a physical clone SIM was activated in Jamtara cluster. Attackers initiated corporate IMPS/RTGS transfers to primary mule VPA "
+    "aeps.settlement.escrow@ybl, intermediary layering account mule.layer.swift@okhdfcbank, and P2P crypto exit VPA mule.cashout.crypto@okaxis. "
+    "Immediate Section 106 BNSS Freeze Notice required for Yes Bank, HDFC Bank, and Axis Bank Nodal Desks."
+)
+
 async def main():
     print("="*80)
-    print(" 🧪 HARD-TESTING AEGIS-I4C ENGINE WITH REAL-WORLD HIGH-VALUE FRAUD CASES")
+    print(" 🧪 HARD-TESTING AEGIS-I4C ENGINE WITH 4 REAL-WORLD HIGH-VALUE FRAUD CASES")
     print("="*80)
     await init_db()
 
@@ -63,6 +86,22 @@ async def main():
             "complainant": "Dr. Ananya Sen",
             "contact": "+91 99490 12384",
             "domain": "goldmansachs-india-vip.top"
+        },
+        {
+            "name": "Case 3: ₹85.00L WhatsApp Institutional Pre-IPO Syndicate & Layered Mule Ring",
+            "text": COMPLAINT_SOPHISTICATED_3,
+            "channel": "State Police Cyber FIR",
+            "complainant": "Vikramaditya Singhania",
+            "contact": "+91 97120 44910",
+            "domain": "institutional-sebi-vip.live"
+        },
+        {
+            "name": "Case 4: ₹35.00L AePS Biometric Cloning & SIM-Swap Corporate RTGS Hijack",
+            "text": COMPLAINT_SOPHISTICATED_4,
+            "channel": "1930 Helpline",
+            "complainant": "Meera Nambiar",
+            "contact": "+91 80881 99201",
+            "domain": "aeps-aadhaar-portal.net"
         }
     ]
 
@@ -85,14 +124,25 @@ async def main():
                     elif line.startswith("data: "): data_dict = json.loads(line[6:].strip())
                 if event_name: events.append((event_name, data_dict))
         
-        complete_event = [e[1] for e in events if e[0] == "triage_complete"][0]
-        print(f"  ✅ Triaged Ticket #{complete_event['ticket_number']} (Inv ID: {complete_event['investigation_id']})")
-        print(f"     Threat Severity: {complete_event['threat_severity']}/100 | Nodes: {len(complete_event['graph']['nodes'])}")
+        complete_events = [e[1] for e in events if e[0] == "triage_complete"]
+        if complete_events:
+            complete_event = complete_events[0]
+            print(f"  ✅ Triaged Ticket #{complete_event['ticket_number']} (Inv ID: {complete_event['investigation_id']})")
+            print(f"     Threat Severity: {complete_event['threat_severity']}/100 | Nodes: {len(complete_event['graph']['nodes'])}")
         
         print(f"  🔍 Probing OSINT for {c['domain']}...")
         osint_res = await OSINTSentinel.inspect_target(c['domain'])
         print(f"     OSINT Risk Score: {osint_res['risk_score']}/100 ({osint_res['risk_level']})")
         print(f"     Risk Flags: {osint_res['risk_flags']}")
+
+    # Verification summary of total investigations in DB
+    async with AsyncSessionLocal() as db:
+        invs = await crud.get_investigations(db)
+        print("\n" + "="*80)
+        print(f" 📊 DATABASE VERIFICATION: TOTAL ACTIVE INVESTIGATION CASES = {len(invs)}")
+        print("="*80)
+        for i, inv in enumerate(invs):
+            print(f"  [{i+1}] {inv['title']} | Target: {inv['target']} | {inv['entity_count']} nodes, {inv['relationship_count']} edges (ID: {inv['id']})")
 
 if __name__ == "__main__":
     asyncio.run(main())

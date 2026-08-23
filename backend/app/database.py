@@ -1,8 +1,12 @@
+import os
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import text
 
-DATABASE_URL = "sqlite+aiosqlite:///./tracex.db"
+# Standardized absolute DB path inside backend directory
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_PATH = os.path.join(BASE_DIR, "tracex.db")
+DATABASE_URL = f"sqlite+aiosqlite:///{DB_PATH.replace(os.sep, '/')}"
 
 engine = create_async_engine(
     DATABASE_URL,

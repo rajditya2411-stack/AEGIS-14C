@@ -151,11 +151,22 @@ export function App() {
   const handleDeleteCase = async (id: string) => {
     try {
       await api.deleteInvestigation(id);
-      setInvestigations((prev) => prev.filter((c) => c.id !== id));
-      if (activeCaseId === id) {
-        const remaining = investigations.filter((c) => c.id !== id);
-        setActiveCaseId(remaining.length > 0 ? remaining[0].id : null);
-      }
+      setInvestigations((prev) => {
+        const remaining = prev.filter((c) => c.id !== id);
+        if (activeCaseId === id) {
+          if (remaining.length > 0) {
+            setActiveCaseId(remaining[0].id);
+          } else {
+            setActiveCaseId(null);
+            setEntities([]);
+            setRelationships([]);
+            setNotes([]);
+            setGraphNodes([]);
+            setGraphEdges([]);
+          }
+        }
+        return remaining;
+      });
     } catch (err) {
       console.error('Error deleting case:', err);
     }

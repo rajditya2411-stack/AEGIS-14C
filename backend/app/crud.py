@@ -138,7 +138,7 @@ async def create_investigation(
 async def get_investigations(db: AsyncSession, user_id: Optional[str] = None) -> List[dict]:
     stmt = select(Investigation)
     if user_id:
-        stmt = stmt.where((Investigation.user_id == user_id) | (Investigation.user_id == None))
+        stmt = stmt.where((Investigation.user_id == user_id) | (Investigation.user_id.is_(None)))
     stmt = stmt.order_by(Investigation.created_at.desc())
     result = await db.execute(stmt)
     invs = result.scalars().all()
@@ -199,9 +199,40 @@ async def delete_investigation(db: AsyncSession, inv_id: str) -> bool:
     inv = res.scalar_one_or_none()
     if not inv:
         return False
-    await db.delete(inv)
-    await db.commit()
-    return True
+
+    try:
+        # 1. Clean up evidence for entities and relationships
+        entity_ids_stmt = select(Entity.id).where(Entity.investigation_id == inv_id)
+        entity_ids = (await db.execute(entity_ids_stmt)).scalars().all()
+        if entity_ids:
+            await db.execute(delete(Evidence).where(Evidence.entity_id.in_(entity_ids)))
+
+        rel_ids_stmt = select(Relationship.id).where(Relationship.investigation_id == inv_id)
+        rel_ids = (await db.execute(rel_ids_stmt)).scalars().all()
+        if rel_ids:
+            await db.execute(delete(Evidence).where(Evidence.relationship_id.in_(rel_ids)))
+
+        # 2. Clean up child investigation dependencies
+        await db.execute(delete(Relationship).where(Relationship.investigation_id == inv_id))
+        await db.execute(delete(Entity).where(Entity.investigation_id == inv_id))
+        await db.execute(delete(Note).where(Note.investigation_id == inv_id))
+        await db.execute(delete(Snapshot).where(Snapshot.investigation_id == inv_id))
+        await db.execute(delete(MuleTransaction).where(MuleTransaction.investigation_id == inv_id))
+        await db.execute(delete(LegalDirective).where(LegalDirective.investigation_id == inv_id))
+        await db.execute(delete(AuditLedgerEntry).where(AuditLedgerEntry.investigation_id == inv_id))
+        await db.execute(delete(IncidentTicket).where(IncidentTicket.investigation_id == inv_id))
+        
+        # 3. Clean up the investigation row
+        await db.execute(delete(Investigation).where(Investigation.id == inv_id))
+        await db.commit()
+        return True
+    except Exception as e:
+        print(f"Explicit delete cascade error: {e}")
+        await db.rollback()
+        # Fallback to ORM delete
+        await db.delete(inv)
+        await db.commit()
+        return True
 
 
 # --- Entity CRUD ---
@@ -355,40 +386,81 @@ async def get_graph_data(db: AsyncSession, inv_id: str) -> GraphResponse:
         target_id = entities[0].id
 
     total_nodes = len(entities)
-    center_x = 400.0
-    center_y = 300.0
-    radius = 320.0
+    center_x = 480.0
+    center_y = 360.0
 
-    non_target_idx = 0
-    non_target_count = max(total_nodes - 1, 1)
+    # Categorize nodes into concentric rings to prevent overlapping
+    ring1_types = {"COMPLAINT_TICKET", "UPI_VPA", "PHONE", "SMS_HEADER", "PHISHING_URL", "APK_HASH", "MULE_ACCOUNT"}
+    ring2_types = {"BANK_ACCOUNT", "DOMAIN", "IP ADDRESS", "ASN", "CERTIFICATE", "TRACKING_ID"}
+
+    ring1_nodes = []
+    ring2_nodes = []
+    ring3_nodes = []
 
     for e in entities:
-        is_center = (e.id == target_id)
-        if is_center:
-            pos_x = center_x
-            pos_y = center_y
+        if e.id == target_id:
+            continue
+        if e.entity_type in ring1_types:
+            ring1_nodes.append(e)
+        elif e.entity_type in ring2_types:
+            ring2_nodes.append(e)
         else:
-            angle = (2 * math.pi * non_target_idx) / non_target_count
+            ring3_nodes.append(e)
+
+    # Position target node at center
+    for e in entities:
+        if e.id == target_id:
+            node_data = {
+                "label": e.value,
+                "entity_type": e.entity_type,
+                "value": e.value,
+                "first_seen": e.first_seen.isoformat(),
+                "last_seen": e.last_seen.isoformat(),
+                "metadata_json": e.metadata_json or {},
+                "is_target": True
+            }
+            nodes.append(GraphNode(
+                id=e.id,
+                type="customEntityNode",
+                data=node_data,
+                position={"x": center_x, "y": center_y}
+            ))
+            break
+
+    # Helper to distribute nodes on a circular ring
+    def layout_ring(node_list: list, radius: float, angle_offset: float = 0.0):
+        count = len(node_list)
+        if count == 0:
+            return
+        for i, ent in enumerate(node_list):
+            angle = angle_offset + (2 * math.pi * i) / count
             pos_x = center_x + radius * math.cos(angle)
             pos_y = center_y + radius * math.sin(angle)
-            non_target_idx += 1
+            node_data = {
+                "label": ent.value,
+                "entity_type": ent.entity_type,
+                "value": ent.value,
+                "first_seen": ent.first_seen.isoformat(),
+                "last_seen": ent.last_seen.isoformat(),
+                "metadata_json": ent.metadata_json or {},
+                "is_target": False
+            }
+            nodes.append(GraphNode(
+                id=ent.id,
+                type="customEntityNode",
+                data=node_data,
+                position={"x": round(pos_x, 1), "y": round(pos_y, 1)}
+            ))
 
-        node_data = {
-            "label": e.value,
-            "entity_type": e.entity_type,
-            "value": e.value,
-            "first_seen": e.first_seen.isoformat(),
-            "last_seen": e.last_seen.isoformat(),
-            "metadata_json": e.metadata_json or {},
-            "is_target": is_center
-        }
-
-        nodes.append(GraphNode(
-            id=e.id,
-            type="customEntityNode",
-            data=node_data,
-            position={"x": round(pos_x, 1), "y": round(pos_y, 1)}
-        ))
+    if total_nodes <= 7:
+        # Single clean circle
+        other_nodes = [e for e in entities if e.id != target_id]
+        layout_ring(other_nodes, radius=280.0)
+    else:
+        # Multi-tiered rings with phase offsets
+        layout_ring(ring1_nodes, radius=260.0, angle_offset=0.0)
+        layout_ring(ring2_nodes, radius=480.0, angle_offset=math.pi / max(len(ring2_nodes) + 1, 4))
+        layout_ring(ring3_nodes, radius=680.0, angle_offset=math.pi / 3)
 
     for r in relationships:
         edges.append(GraphEdge(
