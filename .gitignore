@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Build & Output
+dist/
+frontend/dist/
+build/
+
+# Python cache & venv
+__pycache__/
+backend/app/__pycache__/
+backend/app/collectors/__pycache__/
+backend/app/normalization/__pycache__/
+backend/app/services/__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Databases & local user settings
+*.db
+backend/tracex.db
+backend/app/ai_settings.json
+
+# Environment & IDEs
+.env
+.env.local
+.vscode/
+.idea/
+.DS_Store
