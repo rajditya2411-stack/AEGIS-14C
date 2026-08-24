@@ -18,10 +18,13 @@ import {
   Mail,
   Smartphone,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Sun,
+  Moon
 } from 'lucide-react';
 import * as api from '../lib/api';
 import type { User } from '../types';
+import { useTheme } from '../context/ThemeContext';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -40,6 +43,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onLogout,
   onSettingsUpdated
 }) => {
+  const { theme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState<'account' | 'ai' | 'social'>('account');
 
   // Account Profile & Password state
@@ -269,8 +273,61 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </div>
               )}
 
+              {/* Appearance & Workspace Theme Mode */}
+              <div className="bg-[#18181b] border border-[#27272a] p-4 rounded-sm space-y-3">
+                <div className="flex items-center justify-between border-b border-[#27272a] pb-2">
+                  <div className="flex items-center gap-2 text-xs font-bold text-white font-mono">
+                    <Sun className="w-4 h-4 text-amber-400" />
+                    <span>APPEARANCE & THEME MODE</span>
+                  </div>
+                  <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-sm bg-white text-black">
+                    {theme === 'light' ? 'Light Mode' : 'Dark Mode'}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setTheme('dark')}
+                    className={`p-3 rounded-sm border flex items-center justify-between transition cursor-pointer ${
+                      theme === 'dark'
+                        ? 'bg-zinc-800 border-white text-white font-bold ring-1 ring-white/50 shadow-sm'
+                        : 'bg-[#121214] border-[#27272a] text-zinc-400 hover:text-white hover:border-zinc-500'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Moon className="w-4 h-4 text-sky-400" />
+                      <div className="text-left">
+                        <p className="text-xs font-bold font-mono">Obsidian Dark</p>
+                        <p className="text-[10px] text-zinc-400">Deep obsidian command HUD</p>
+                      </div>
+                    </div>
+                    {theme === 'dark' && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setTheme('light')}
+                    className={`p-3 rounded-sm border flex items-center justify-between transition cursor-pointer ${
+                      theme === 'light'
+                        ? 'bg-white border-slate-900 text-slate-900 font-bold ring-1 ring-slate-900/50 shadow-sm'
+                        : 'bg-[#121214] border-[#27272a] text-zinc-400 hover:text-white hover:border-zinc-500'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Sun className="w-4 h-4 text-amber-500" />
+                      <div className="text-left">
+                        <p className="text-xs font-bold font-mono">Clean Light</p>
+                        <p className="text-[10px] text-zinc-400">High-contrast white theme</p>
+                      </div>
+                    </div>
+                    {theme === 'light' && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
+                  </button>
+                </div>
+              </div>
+
               {/* User Profile Card */}
-              <form onSubmit={handleUpdateProfile} className="bg-[#18181b] border border-[#27272a] p-4 rounded-md space-y-3">
+              <form onSubmit={handleUpdateProfile} className="bg-[#18181b] border border-[#27272a] p-4 rounded-sm space-y-3">
                 <div className="flex items-center justify-between border-b border-[#27272a] pb-3">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-sky-500/20 border border-sky-400/40 flex items-center justify-center text-sky-400 font-bold font-mono text-sm">

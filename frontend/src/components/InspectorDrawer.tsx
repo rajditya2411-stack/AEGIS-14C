@@ -37,6 +37,7 @@ import type {
   LedgerVerificationResponse
 } from '../types';
 import * as api from '../lib/api';
+import { useTheme } from '../context/ThemeContext';
 
 interface InspectorDrawerProps {
   selectedEntity: Entity | null;
@@ -217,76 +218,81 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
     : [];
 
   return (
-    <aside className="w-88 bg-[#09090b] border-l border-[#27272a] flex flex-col h-screen select-none shrink-0 z-20 font-sans shadow-2xl">
-      {/* Drawer Header */}
-      <div className="p-3.5 border-b border-[#27272a] flex items-center justify-between bg-[#121214]">
+    <aside className="w-88 bg-[#09090b] dark:bg-[#09090b] light:bg-[#ffffff] border-l border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] flex flex-col h-screen select-none shrink-0 z-20 font-sans shadow-2xl transition-colors duration-200">
+      {/* Drawer Header matching target mockup */}
+      <div className="p-3.5 border-b border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] flex items-center justify-between bg-[#121214] dark:bg-[#121214] light:bg-[#f8fafc]">
         <div>
-          <span className="text-[10px] font-black uppercase tracking-wider text-zinc-400 block font-mono">
-            {selectedEntity ? 'NODE DETAILS' : 'CASE COMMAND & LEGAL DESK'}
-          </span>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-white dark:text-white light:text-slate-900 font-sans">
+              Inspector
+            </span>
+            <span className="text-[10px] text-zinc-500 dark:text-zinc-500 light:text-slate-400 font-mono ml-2">
+              (352px)
+            </span>
+          </div>
           <div className="flex items-center gap-2 truncate pr-2 mt-0.5">
-            <h2 className="font-bold text-white text-sm tracking-wide truncate font-mono">
+            <h2 className="font-bold text-white dark:text-white light:text-slate-900 text-xs tracking-wide truncate font-mono">
               {selectedEntity ? selectedEntity.value : (activeCase?.title || 'AEGIS Triage Desk')}
             </h2>
             {selectedEntity && <CopyButton text={selectedEntity.value} />}
           </div>
         </div>
-        <button onClick={onClose} className="text-zinc-400 hover:text-white p-1 shrink-0 transition cursor-pointer">
+        <button onClick={onClose} className="text-zinc-400 dark:text-zinc-400 light:text-slate-500 hover:text-white dark:hover:text-white light:hover:text-slate-900 p-1 shrink-0 transition cursor-pointer">
           <X className="w-4 h-4" />
         </button>
       </div>
 
       {/* Tabs Navigation */}
-      <div className="flex border-b border-[#27272a] bg-[#09090b] text-[11px] overflow-x-auto scrollbar-none font-mono">
+      <div className="flex border-b border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] bg-[#09090b] dark:bg-[#09090b] light:bg-[#f8fafc] text-[11px] overflow-x-auto scrollbar-none font-mono">
         <button
           onClick={() => setActiveTab('details')}
           className={`px-3 py-2.5 font-bold border-b-2 flex items-center gap-1 transition cursor-pointer whitespace-nowrap ${
             activeTab === 'details'
-              ? 'border-stone-200 text-[#fafaf9] bg-[#121214]'
-              : 'border-transparent text-zinc-400 hover:text-zinc-200'
+              ? 'border-stone-200 dark:border-stone-200 light:border-slate-900 text-[#fafaf9] dark:text-[#fafaf9] light:text-slate-900 bg-[#121214] dark:bg-[#121214] light:bg-white'
+              : 'border-transparent text-zinc-400 dark:text-zinc-400 light:text-slate-500 hover:text-zinc-200 dark:hover:text-zinc-200 light:hover:text-slate-900'
           }`}
         >
-          <Tag className="w-3 h-3 text-stone-300" /> Node
+          <Tag className="w-3 h-3 text-stone-300 dark:text-stone-300 light:text-slate-700" /> Node Details
         </button>
         <button
           onClick={() => setActiveTab('relationship')}
           className={`px-3 py-2.5 font-bold border-b-2 flex items-center gap-1 transition cursor-pointer whitespace-nowrap ${
             activeTab === 'relationship'
-              ? 'border-stone-200 text-[#fafaf9] bg-[#121214]'
-              : 'border-transparent text-zinc-400 hover:text-zinc-200'
+              ? 'border-stone-200 dark:border-stone-200 light:border-slate-900 text-[#fafaf9] dark:text-[#fafaf9] light:text-slate-900 bg-[#121214] dark:bg-[#121214] light:bg-white'
+              : 'border-transparent text-zinc-400 dark:text-zinc-400 light:text-slate-500 hover:text-zinc-200 dark:hover:text-zinc-200 light:hover:text-slate-900'
           }`}
         >
-          <Share2 className="w-3 h-3 text-stone-300" /> Graph
+          <Share2 className="w-3 h-3 text-stone-300 dark:text-stone-300 light:text-slate-700" /> Graph
         </button>
         <button
           onClick={() => setActiveTab('legal')}
           className={`px-3 py-2.5 font-bold border-b-2 flex items-center gap-1 transition cursor-pointer whitespace-nowrap ${
             activeTab === 'legal'
-              ? 'border-stone-200 text-[#fafaf9] bg-[#121214]'
-              : 'border-transparent text-zinc-400 hover:text-zinc-200'
+              ? 'border-stone-200 dark:border-stone-200 light:border-slate-900 text-[#fafaf9] dark:text-[#fafaf9] light:text-slate-900 bg-[#121214] dark:bg-[#121214] light:bg-white'
+              : 'border-transparent text-zinc-400 dark:text-zinc-400 light:text-slate-500 hover:text-zinc-200 dark:hover:text-zinc-200 light:hover:text-slate-900'
           }`}
         >
-          <Scale className="w-3 h-3 text-indigo-400" /> Sec 106 BNSS ({legalDirectives.length})
+          <Scale className="w-3 h-3 text-indigo-400 dark:text-indigo-400 light:text-indigo-600" /> Sec 106 ({legalDirectives.length})
         </button>
         <button
           onClick={() => setActiveTab('ledger')}
           className={`px-3 py-2.5 font-bold border-b-2 flex items-center gap-1 transition cursor-pointer whitespace-nowrap ${
             activeTab === 'ledger'
-              ? 'border-stone-200 text-[#fafaf9] bg-[#121214]'
-              : 'border-transparent text-zinc-400 hover:text-zinc-200'
+              ? 'border-stone-200 dark:border-stone-200 light:border-slate-900 text-[#fafaf9] dark:text-[#fafaf9] light:text-slate-900 bg-[#121214] dark:bg-[#121214] light:bg-white'
+              : 'border-transparent text-zinc-400 dark:text-zinc-400 light:text-slate-500 hover:text-zinc-200 dark:hover:text-zinc-200 light:hover:text-slate-900'
           }`}
         >
-          <Lock className="w-3 h-3 text-emerald-400" /> Ledger ({auditLedger.length})
+          <Lock className="w-3 h-3 text-emerald-400 dark:text-emerald-400 light:text-emerald-600" /> Ledger ({auditLedger.length})
         </button>
         <button
           onClick={() => setActiveTab('notes')}
           className={`px-3 py-2.5 font-bold border-b-2 flex items-center gap-1 transition cursor-pointer whitespace-nowrap ${
             activeTab === 'notes'
-              ? 'border-stone-200 text-[#fafaf9] bg-[#121214]'
-              : 'border-transparent text-zinc-400 hover:text-zinc-200'
+              ? 'border-stone-200 dark:border-stone-200 light:border-slate-900 text-[#fafaf9] dark:text-[#fafaf9] light:text-slate-900 bg-[#121214] dark:bg-[#121214] light:bg-white'
+              : 'border-transparent text-zinc-400 dark:text-zinc-400 light:text-slate-500 hover:text-zinc-200 dark:hover:text-zinc-200 light:hover:text-slate-900'
           }`}
         >
-          <FileText className="w-3 h-3 text-stone-300" /> Notes
+          <FileText className="w-3 h-3 text-stone-300 dark:text-stone-300 light:text-slate-700" /> Notes
         </button>
       </div>
 
@@ -297,32 +303,36 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
           <div className="space-y-4">
             {selectedEntity ? (
               <>
-                <div className="bg-[#121214] border border-[#27272a] rounded-lg p-3 space-y-2">
+                <div className="bg-[#121214] dark:bg-[#121214] light:bg-[#f8fafc] border border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] rounded-sm p-3.5 space-y-2.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono uppercase text-zinc-500">Entity Type</span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-sky-950 text-sky-400 border border-sky-500/30">
+                    <span className="text-[10px] font-mono uppercase text-zinc-500 dark:text-zinc-500 light:text-slate-500 font-bold">Node Details</span>
+                    <span className="px-2 py-0.5 rounded-sm text-[10px] font-mono font-bold bg-sky-950 dark:bg-sky-950 light:bg-sky-100 text-sky-400 dark:text-sky-400 light:text-sky-800 border border-sky-500/30 dark:border-sky-500/30 light:border-sky-300">
                       {selectedEntity.entity_type}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[10px] font-mono uppercase text-zinc-500 block">Value</span>
-                    <p className="text-xs font-mono font-semibold text-white break-all">{selectedEntity.value}</p>
+                    <span className="text-[10px] font-mono uppercase text-zinc-400 dark:text-zinc-500 light:text-slate-500 block">Name / Type</span>
+                    <p className="text-xs font-mono font-bold text-white dark:text-white light:text-slate-900">{selectedEntity.entity_type}</p>
                   </div>
                   <div>
-                    <span className="text-[10px] font-mono uppercase text-zinc-500 block">First Observed</span>
-                    <p className="text-[11px] font-mono text-zinc-400">{formatDate(selectedEntity.created_at)}</p>
+                    <span className="text-[10px] font-mono uppercase text-zinc-400 dark:text-zinc-500 light:text-slate-500 block">Target / Value</span>
+                    <p className="text-xs font-mono font-semibold text-white dark:text-white light:text-slate-900 break-all">{selectedEntity.value}</p>
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-mono uppercase text-zinc-400 dark:text-zinc-500 light:text-slate-500 block">Observed Timestamp</span>
+                    <p className="text-[11px] font-mono text-zinc-400 dark:text-zinc-400 light:text-slate-600">{formatDate(selectedEntity.created_at)}</p>
                   </div>
                 </div>
 
                 {/* Metadata JSON Viewer */}
                 {selectedEntity.metadata_json && Object.keys(selectedEntity.metadata_json).length > 0 && (
-                  <div className="bg-[#121214] border border-[#27272a] rounded-lg p-3 space-y-2">
-                    <span className="text-[10px] font-mono uppercase text-zinc-400 font-bold block">Threat Metadata & Intel</span>
+                  <div className="bg-[#121214] dark:bg-[#121214] light:bg-[#f8fafc] border border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] rounded-sm p-3 space-y-2">
+                    <span className="text-[10px] font-mono uppercase text-zinc-400 dark:text-zinc-400 light:text-slate-600 font-bold block">Threat Metadata & Intel</span>
                     <div className="space-y-1.5 text-xs font-mono">
                       {Object.entries(selectedEntity.metadata_json).map(([k, v]) => (
-                        <div key={k} className="flex flex-col border-b border-zinc-800 pb-1 last:border-0">
-                          <span className="text-[10px] text-zinc-500">{k}:</span>
-                          <span className="text-zinc-200 text-[11px] break-all">{typeof v === 'object' ? JSON.stringify(v) : String(v)}</span>
+                        <div key={k} className="flex flex-col border-b border-zinc-800 dark:border-zinc-800 light:border-slate-200 pb-1 last:border-0">
+                          <span className="text-[10px] text-zinc-500 dark:text-zinc-500 light:text-slate-500">{k}:</span>
+                          <span className="text-zinc-200 dark:text-zinc-200 light:text-slate-800 text-[11px] break-all">{typeof v === 'object' ? JSON.stringify(v) : String(v)}</span>
                         </div>
                       ))}
                     </div>

@@ -4,18 +4,36 @@
   color-scheme: dark;
 }
 
+:root[data-theme="light"],
+html.light {
+  color-scheme: light;
+}
+
 body {
   margin: 0;
   background-color: #050506;
   color: #f4f4f5;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   overflow: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+html.light body,
+[data-theme="light"] body {
+  background-color: #f8fafc;
+  color: #0f172a;
 }
 
 /* Selection Highlight */
 ::selection {
   background-color: #3f3f46;
   color: #fafaf9;
+}
+
+html.light ::selection,
+[data-theme="light"] ::selection {
+  background-color: #e2e8f0;
+  color: #0f172a;
 }
 
 /* Custom Minimalist Dark Scrollbar */
@@ -28,23 +46,44 @@ body {
 }
 ::-webkit-scrollbar-thumb {
   background: #27272a;
-  border-radius: 4px;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #3f3f46;
 }
 
-/* React Flow custom styling - Obsidian Dark HUD */
+html.light ::-webkit-scrollbar-thumb,
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+html.light ::-webkit-scrollbar-thumb:hover,
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* React Flow custom styling - Dark HUD */
 .react-flow__background {
   background-color: #050506 !important;
+}
+
+html.light .react-flow__background,
+[data-theme="light"] .react-flow__background {
+  background-color: #ffffff !important;
 }
 
 .react-flow__controls {
   background-color: #121214 !important;
   border: 1px solid #27272a !important;
-  border-radius: 6px !important;
+  border-radius: 4px !important;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
   padding: 2px !important;
+}
+
+html.light .react-flow__controls,
+[data-theme="light"] .react-flow__controls {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
 }
 
 .react-flow__controls-button {
@@ -57,9 +96,16 @@ body {
   cursor: pointer !important;
   width: 28px !important;
   height: 28px !important;
-  border-radius: 4px !important;
+  border-radius: 2px !important;
   margin-bottom: 1px !important;
   transition: all 0.15s ease !important;
+}
+
+html.light .react-flow__controls-button,
+[data-theme="light"] .react-flow__controls-button {
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  color: #475569 !important;
 }
 
 .react-flow__controls-button:last-child {
@@ -78,12 +124,29 @@ body {
   color: #fafaf9 !important;
 }
 
+html.light .react-flow__controls-button:hover,
+[data-theme="light"] .react-flow__controls-button:hover {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
 .react-flow__controls-button:active {
   background-color: #3f3f46 !important;
 }
 
+html.light .react-flow__controls-button:active,
+[data-theme="light"] .react-flow__controls-button:active {
+  background-color: #e2e8f0 !important;
+}
+
 .react-flow__edge-path {
   stroke: #3f3f46 !important;
+  stroke-width: 1.5px !important;
+}
+
+html.light .react-flow__edge-path,
+[data-theme="light"] .react-flow__edge-path {
+  stroke: #94a3b8 !important;
   stroke-width: 1.5px !important;
 }
 
@@ -94,7 +157,19 @@ body {
   font-family: monospace !important;
 }
 
+html.light .react-flow__edge-text,
+[data-theme="light"] .react-flow__edge-text {
+  fill: #1e293b !important;
+}
+
 .react-flow__edge-textbg {
   fill: #121214 !important;
-  rx: 4px;
+  rx: 2px;
+}
+
+html.light .react-flow__edge-textbg,
+[data-theme="light"] .react-flow__edge-textbg {
+  fill: #ffffff !important;
+  stroke: #e2e8f0;
+  stroke-width: 1px;
 }

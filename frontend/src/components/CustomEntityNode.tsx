@@ -275,11 +275,11 @@ export const CustomEntityNode = memo(({ data, selected }: CustomNodeProps) => {
       </div>
 
       {/* Label Underneath Node */}
-      <div className="mt-1.5 px-2.5 py-1 rounded-sm bg-[#121214]/95 border border-[#27272a] backdrop-blur-md shadow-lg text-center max-w-[180px]">
-        <span className="text-[9px] font-mono uppercase tracking-wider block text-zinc-400 font-bold">
+      <div className="mt-1.5 px-2.5 py-1 rounded-sm bg-[#121214]/95 dark:bg-[#121214]/95 light:bg-white/95 border border-[#27272a] dark:border-[#27272a] light:border-slate-300 backdrop-blur-md shadow-md text-center max-w-[180px] transition-colors">
+        <span className="text-[9px] font-mono uppercase tracking-wider block text-zinc-400 dark:text-zinc-400 light:text-slate-500 font-bold">
           {data.entity_type.replace('_', ' ')}
         </span>
-        <p className="text-[11px] font-mono font-semibold text-[#fafaf9] truncate" title={data.label}>
+        <p className="text-[11px] font-mono font-semibold text-[#fafaf9] dark:text-[#fafaf9] light:text-slate-900 truncate" title={data.label}>
           {data.label}
         </p>
       </div>
