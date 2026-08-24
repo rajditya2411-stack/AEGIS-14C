@@ -160,6 +160,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <LogOut className="w-4 h-4" />
           </button>
         </div>
+      </aside>
+
       {/* Secondary Sidebar Panel matching target screenshot */}
       <aside className="w-64 bg-[#09090b] dark:bg-[#09090b] light:bg-[#ffffff] flex flex-col h-screen overflow-hidden border-r border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] transition-colors duration-200">
         {/* Section Header: Case Management */}
