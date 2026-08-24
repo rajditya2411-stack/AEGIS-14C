@@ -145,23 +145,28 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
   }, [onSelectNode]);
 
   const { theme, toggleTheme } = useTheme();
+  const isLight = theme === 'light';
 
   return (
     <div className="flex-1 h-screen relative bg-[#050506] overflow-hidden select-none flex flex-col font-sans">
       {/* Top Header HUD Banner matching uploaded mockup */}
-      <div className="bg-[#09090b] dark:bg-[#09090b] light:bg-[#ffffff] border-b border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] p-2.5 px-6 flex flex-wrap items-center justify-between z-10 shadow-sm gap-3 transition-colors duration-200">
+      <div className={`border-b p-2.5 px-6 flex flex-wrap items-center justify-between z-10 shadow-sm gap-3 transition-colors duration-200 ${
+        isLight ? 'bg-white border-slate-200 text-slate-900' : 'bg-[#09090b] border-[#27272a] text-white'
+      }`}>
         {/* Left: App Title / Case Info & Anomaly Badges */}
         <div className="flex items-center gap-3 flex-wrap">
           {/* Brand Name */}
-          <span className="text-xs font-bold tracking-wide text-white dark:text-white light:text-slate-900 font-sans">
+          <span className={`text-xs font-bold tracking-wide font-sans ${isLight ? 'text-slate-900' : 'text-white'}`}>
             AEGIS-14C (TRACE)
           </span>
 
           {/* Target Pill */}
-          <div className="flex items-center gap-2 bg-[#121214] dark:bg-[#121214] light:bg-[#f1f5f9] border border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] px-3.5 py-1.5 rounded-sm shadow-inner">
-            <ShieldAlert className="w-4 h-4 text-violet-400 dark:text-violet-400 light:text-violet-600" />
-            <span className="text-zinc-400 dark:text-zinc-500 light:text-slate-500 text-xs font-mono">case:</span>
-            <span className="text-white dark:text-white light:text-slate-900 text-xs font-bold font-mono truncate max-w-[180px]" title={activeCase?.target || 'AEGIS Target'}>
+          <div className={`flex items-center gap-2 px-3.5 py-1.5 rounded-sm shadow-inner border ${
+            isLight ? 'bg-[#f1f5f9] border-slate-200' : 'bg-[#121214] border-[#27272a]'
+          }`}>
+            <ShieldAlert className={`w-4 h-4 ${isLight ? 'text-violet-600' : 'text-violet-400'}`} />
+            <span className={`text-xs font-mono ${isLight ? 'text-slate-500' : 'text-zinc-400'}`}>case:</span>
+            <span className={`text-xs font-bold font-mono truncate max-w-[180px] ${isLight ? 'text-slate-900' : 'text-white'}`} title={activeCase?.target || 'AEGIS Target'}>
               {activeCase?.target || 'No Active Case'}
             </span>
           </div>
@@ -170,8 +175,8 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
           {agentState.threatSeverity !== undefined && agentState.threatSeverity > 0 && (
             <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-mono font-bold border ${
               agentState.severityLevel === 'CRITICAL' || agentState.threatSeverity >= 80
-                ? 'bg-rose-950/60 dark:bg-rose-950/60 light:bg-rose-50 border-rose-500/50 text-rose-400 dark:text-rose-400 light:text-rose-700 shadow-[0_0_15px_rgba(244,63,94,0.3)] animate-pulse'
-                : 'bg-amber-950/60 dark:bg-amber-950/60 light:bg-amber-50 border-amber-500/50 text-amber-300 dark:text-amber-300 light:text-amber-800'
+                ? isLight ? 'bg-rose-100 border-rose-400 text-rose-800 animate-pulse' : 'bg-rose-950/60 border-rose-500/50 text-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.3)] animate-pulse'
+                : isLight ? 'bg-amber-100 border-amber-400 text-amber-800' : 'bg-amber-950/60 border-amber-500/50 text-amber-300'
             }`}>
               <AlertOctagon className="w-3.5 h-3.5" />
               <span>{agentState.severityLevel || 'HIGH'} ({agentState.threatSeverity}/100)</span>
@@ -180,37 +185,47 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
 
           {/* Cyclic Laundering Loop Badge */}
           {agentState.cyclicCount !== undefined && agentState.cyclicCount > 0 && (
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-mono font-bold bg-purple-950/60 dark:bg-purple-950/60 light:bg-purple-50 border border-purple-500/50 text-purple-300 dark:text-purple-300 light:text-purple-800 shadow">
-              <Repeat className="w-3.5 h-3.5 text-purple-400 dark:text-purple-400 light:text-purple-600" />
+            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-mono font-bold border shadow ${
+              isLight ? 'bg-purple-100 border-purple-400 text-purple-800' : 'bg-purple-950/60 border-purple-500/50 text-purple-300'
+            }`}>
+              <Repeat className={`w-3.5 h-3.5 ${isLight ? 'text-purple-700' : 'text-purple-400'}`} />
               <span>{agentState.cyclicCount} Cyclic</span>
             </div>
           )}
 
           {/* Rapid Split Anomaly Badge */}
           {agentState.splitCount !== undefined && agentState.splitCount > 0 && (
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-mono font-bold bg-orange-950/60 dark:bg-orange-950/60 light:bg-orange-50 border border-orange-500/50 text-orange-300 dark:text-orange-300 light:text-orange-800 shadow">
-              <GitFork className="w-3.5 h-3.5 text-orange-400 dark:text-orange-400 light:text-orange-600" />
+            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-mono font-bold border shadow ${
+              isLight ? 'bg-orange-100 border-orange-400 text-orange-800' : 'bg-orange-950/60 border-orange-500/50 text-orange-300'
+            }`}>
+              <GitFork className={`w-3.5 h-3.5 ${isLight ? 'text-orange-700' : 'text-orange-400'}`} />
               <span>{agentState.splitCount} Splits</span>
             </div>
           )}
         </div>
 
         {/* Center: Merged Completion Progress Bar & 4-Stage State Machine */}
-        <div className="hidden lg:flex items-center gap-3 bg-[#0d0e14] dark:bg-[#0d0e14] light:bg-[#f8fafc] border border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] px-3.5 py-1.5 rounded-sm">
+        <div className={`hidden lg:flex items-center gap-3 px-3.5 py-1.5 rounded-sm border ${
+          isLight ? 'bg-[#f8fafc] border-slate-200' : 'bg-[#0d0e14] border-[#27272a]'
+        }`}>
           {/* Progress Bar Container matching uploaded UI */}
-          <div className="flex items-center gap-2 pr-2.5 border-r border-zinc-700 dark:border-zinc-700 light:border-slate-200">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 dark:text-zinc-400 light:text-slate-500 font-mono whitespace-nowrap">
+          <div className={`flex items-center gap-2 pr-2.5 border-r ${isLight ? 'border-slate-200' : 'border-zinc-700'}`}>
+            <span className={`text-[10px] uppercase font-bold tracking-wider font-mono whitespace-nowrap ${
+              isLight ? 'text-slate-500' : 'text-zinc-400'
+            }`}>
               Agent Progress
             </span>
-            <div className="w-24 h-2 rounded-full bg-zinc-800 dark:bg-zinc-800 light:bg-slate-200 overflow-hidden relative border border-zinc-700/50 dark:border-zinc-700/50 light:border-slate-300">
+            <div className={`w-24 h-2 rounded-full overflow-hidden relative border ${
+              isLight ? 'bg-slate-200 border-slate-300' : 'bg-zinc-800 border-zinc-700/50'
+            }`}>
               <div
-                className="h-full bg-white dark:bg-white light:bg-slate-900 transition-all duration-300 rounded-full"
+                className={`h-full transition-all duration-300 rounded-full ${isLight ? 'bg-slate-900' : 'bg-white'}`}
                 style={{
                   width: `${agentState.stageIndex ? (agentState.stageIndex / 4) * 100 : 0}%`,
                 }}
               />
             </div>
-            <span className="text-[10px] font-mono font-bold text-white dark:text-white light:text-slate-900">
+            <span className={`text-[10px] font-mono font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
               {agentState.stageIndex || 0}/4
             </span>
           </div>
@@ -219,48 +234,48 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
           <div className="flex items-center gap-2 text-xs font-mono">
             {/* Agent 1: Ingestion */}
             <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-sm transition ${
-              agentState.stageIndex === 1 ? 'bg-violet-950 text-violet-300 border border-violet-500/40 animate-pulse' :
-              agentState.stageIndex > 1 ? 'text-emerald-400 dark:text-emerald-400 light:text-emerald-600 font-bold' : 'text-zinc-500 dark:text-zinc-500 light:text-slate-400'
+              agentState.stageIndex === 1 ? (isLight ? 'bg-violet-100 text-violet-800 border border-violet-400 animate-pulse font-bold' : 'bg-violet-950 text-violet-300 border border-violet-500/40 animate-pulse') :
+              agentState.stageIndex > 1 ? (isLight ? 'text-emerald-700 font-bold' : 'text-emerald-400 font-bold') : (isLight ? 'text-slate-400' : 'text-zinc-500')
             }`}>
-              {agentState.stageIndex > 1 ? <CheckCircle2 className="w-3 h-3 text-emerald-400 dark:text-emerald-400 light:text-emerald-600" /> : <span className="w-1.5 h-1.5 rounded-full bg-violet-400"></span>}
+              {agentState.stageIndex > 1 ? <CheckCircle2 className={`w-3 h-3 ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`} /> : <span className="w-1.5 h-1.5 rounded-full bg-violet-400"></span>}
               <span>1. Ingestion</span>
             </div>
 
-            <span className="text-zinc-600 dark:text-zinc-600 light:text-slate-300">→</span>
+            <span className={isLight ? 'text-slate-300' : 'text-zinc-600'}>→</span>
 
             {/* Agent 2: OSINT */}
             <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-sm transition ${
-              agentState.stageIndex === 2 ? 'bg-sky-950 text-sky-300 border border-sky-500/40 animate-pulse' :
-              agentState.stageIndex > 2 ? 'text-emerald-400 dark:text-emerald-400 light:text-emerald-600 font-bold' : 'text-zinc-500 dark:text-zinc-500 light:text-slate-400'
+              agentState.stageIndex === 2 ? (isLight ? 'bg-sky-100 text-sky-800 border border-sky-400 animate-pulse font-bold' : 'bg-sky-950 text-sky-300 border border-sky-500/40 animate-pulse') :
+              agentState.stageIndex > 2 ? (isLight ? 'text-emerald-700 font-bold' : 'text-emerald-400 font-bold') : (isLight ? 'text-slate-400' : 'text-zinc-500')
             }`}>
-              {agentState.stageIndex > 2 ? <CheckCircle2 className="w-3 h-3 text-emerald-400 dark:text-emerald-400 light:text-emerald-600" /> : <span className="w-1.5 h-1.5 rounded-full bg-sky-400"></span>}
+              {agentState.stageIndex > 2 ? <CheckCircle2 className={`w-3 h-3 ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`} /> : <span className="w-1.5 h-1.5 rounded-full bg-sky-400"></span>}
               <span>2. OSINT</span>
             </div>
 
-            <span className="text-zinc-600 dark:text-zinc-600 light:text-slate-300">→</span>
+            <span className={isLight ? 'text-slate-300' : 'text-zinc-600'}>→</span>
 
             {/* Agent 3: Mule */}
             <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-sm transition ${
-              agentState.stageIndex === 3 ? 'bg-rose-950 text-rose-300 border border-rose-500/40 animate-pulse' :
-              agentState.stageIndex > 3 ? 'text-emerald-400 dark:text-emerald-400 light:text-emerald-600 font-bold' : 'text-zinc-500 dark:text-zinc-500 light:text-slate-400'
+              agentState.stageIndex === 3 ? (isLight ? 'bg-rose-100 text-rose-800 border border-rose-400 animate-pulse font-bold' : 'bg-rose-950 text-rose-300 border border-rose-500/40 animate-pulse') :
+              agentState.stageIndex > 3 ? (isLight ? 'text-emerald-700 font-bold' : 'text-emerald-400 font-bold') : (isLight ? 'text-slate-400' : 'text-zinc-500')
             }`}>
-              {agentState.stageIndex > 3 ? <CheckCircle2 className="w-3 h-3 text-emerald-400 dark:text-emerald-400 light:text-emerald-600" /> : <span className="w-1.5 h-1.5 rounded-full bg-rose-400"></span>}
+              {agentState.stageIndex > 3 ? <CheckCircle2 className={`w-3 h-3 ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`} /> : <span className="w-1.5 h-1.5 rounded-full bg-rose-400"></span>}
               <span>3. Mule Tracer</span>
             </div>
 
-            <span className="text-zinc-600 dark:text-zinc-600 light:text-slate-300">→</span>
+            <span className={isLight ? 'text-slate-300' : 'text-zinc-600'}>→</span>
 
             {/* Agent 4: Legal */}
             <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-sm transition ${
-              agentState.stageIndex === 4 ? 'bg-indigo-950 text-indigo-300 border border-indigo-500/40 animate-pulse' :
-              agentState.stageIndex >= 4 ? 'text-emerald-400 dark:text-emerald-400 light:text-emerald-600 font-bold' : 'text-zinc-500 dark:text-zinc-500 light:text-slate-400'
+              agentState.stageIndex === 4 ? (isLight ? 'bg-indigo-100 text-indigo-800 border border-indigo-400 animate-pulse font-bold' : 'bg-indigo-950 text-indigo-300 border border-indigo-500/40 animate-pulse') :
+              agentState.stageIndex >= 4 ? (isLight ? 'text-emerald-700 font-bold' : 'text-emerald-400 font-bold') : (isLight ? 'text-slate-400' : 'text-zinc-500')
             }`}>
-              {agentState.stageIndex >= 4 && !agentState.isStreaming ? <CheckCircle2 className="w-3 h-3 text-emerald-400 dark:text-emerald-400 light:text-emerald-600" /> : <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>}
+              {agentState.stageIndex >= 4 && !agentState.isStreaming ? <CheckCircle2 className={`w-3 h-3 ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`} /> : <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>}
               <span>4. Legal</span>
             </div>
 
             {agentState.runtimeMs !== undefined && agentState.runtimeMs > 0 && (
-              <span className="text-[10px] text-zinc-400 dark:text-zinc-400 light:text-slate-500 pl-2 border-l border-zinc-700 dark:border-zinc-700 light:border-slate-300">
+              <span className={`text-[10px] pl-2 border-l ${isLight ? 'text-slate-500 border-slate-300' : 'text-zinc-400 border-zinc-700'}`}>
                 {(agentState.runtimeMs / 1000).toFixed(2)}s
               </span>
             )}
@@ -274,7 +289,11 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
             <button
               onClick={onOpenComplaintModal}
               disabled={agentState.isStreaming}
-              className="flex items-center gap-1.5 text-xs font-bold bg-white dark:bg-white light:bg-slate-900 text-black dark:text-black light:text-white hover:bg-stone-100 dark:hover:bg-stone-100 light:hover:bg-slate-800 px-3.5 py-2 rounded-sm transition shadow-sm border border-stone-200 dark:border-stone-200 light:border-slate-800 cursor-pointer disabled:opacity-50"
+              className={`flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-sm transition shadow-sm border cursor-pointer disabled:opacity-50 ${
+                isLight
+                  ? 'bg-white text-slate-900 hover:bg-slate-100 border-slate-300'
+                  : 'bg-white text-black hover:bg-stone-100 border-stone-200'
+              }`}
             >
               {agentState.isStreaming ? (
                 <>
@@ -297,7 +316,9 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
             className={`flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-sm transition border cursor-pointer ${
               isScanning
                 ? 'bg-amber-950/60 border-amber-500/50 text-amber-300'
-                : 'bg-white dark:bg-white light:bg-white text-black dark:text-black light:text-slate-900 hover:bg-stone-100 dark:hover:bg-stone-100 light:hover:bg-slate-50 border-stone-200 dark:border-stone-200 light:border-slate-300 shadow-sm'
+                : isLight
+                  ? 'bg-white text-slate-900 hover:bg-slate-100 border-slate-300 shadow-sm'
+                  : 'bg-white text-black hover:bg-stone-100 border-stone-200 shadow-sm'
             }`}
           >
             {isScanning ? (
@@ -317,17 +338,25 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
           {activeCase && (
             <button
               onClick={() => downloadLegalFreezeNoticePDF(activeCase.id)}
-              className="flex items-center gap-1.5 text-xs font-bold bg-indigo-950/80 dark:bg-indigo-950/80 light:bg-indigo-50 hover:bg-indigo-900/90 dark:hover:bg-indigo-900/90 light:hover:bg-indigo-100 text-indigo-200 dark:text-indigo-200 light:text-indigo-900 border border-indigo-500/40 dark:border-indigo-500/40 light:border-indigo-200 px-3 py-2 rounded-sm transition shadow-sm cursor-pointer"
+              className={`flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-sm transition shadow-sm cursor-pointer border ${
+                isLight
+                  ? 'bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border-indigo-300'
+                  : 'bg-indigo-950/80 hover:bg-indigo-900/90 text-indigo-200 border-indigo-500/40'
+              }`}
               title="Download Statutory Section 106 BNSS Bank Freeze Notice (PDF)"
             >
-              <Scale className="w-3.5 h-3.5 text-indigo-300 dark:text-indigo-300 light:text-indigo-700" />
+              <Scale className={`w-3.5 h-3.5 ${isLight ? 'text-indigo-700' : 'text-indigo-300'}`} />
               <span>Sec 106 Notice</span>
             </button>
           )}
 
           <button
             onClick={onOpenNewEntityModal}
-            className="flex items-center gap-1.5 text-xs font-bold bg-white dark:bg-white light:bg-white hover:bg-stone-100 dark:hover:bg-stone-100 light:hover:bg-slate-50 text-black dark:text-black light:text-slate-900 border border-stone-200 dark:border-stone-200 light:border-slate-300 px-3 py-2 rounded-sm transition cursor-pointer shadow-sm"
+            className={`flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-sm transition cursor-pointer shadow-sm border ${
+              isLight
+                ? 'bg-white text-slate-900 hover:bg-slate-100 border-slate-300'
+                : 'bg-white text-black hover:bg-stone-100 border-stone-200'
+            }`}
           >
             <Plus className="w-3.5 h-3.5 stroke-[3]" /> + Add Node
           </button>
@@ -335,10 +364,10 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
           {onToggleAIChat && (
             <button
               onClick={onToggleAIChat}
-              className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-sm transition border cursor-pointer ${
+              className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-sm transition border cursor-pointer shadow-sm ${
                 isAIChatOpen
-                  ? 'bg-white dark:bg-white light:bg-slate-900 text-black dark:text-black light:text-white border-stone-200 dark:border-stone-200 light:border-slate-900 font-bold shadow-sm'
-                  : 'bg-[#121214] dark:bg-[#121214] light:bg-white hover:bg-[#18181b] dark:hover:bg-[#18181b] light:hover:bg-slate-50 text-zinc-200 dark:text-zinc-200 light:text-slate-700 border-[#27272a] dark:border-[#27272a] light:border-slate-300 shadow-sm'
+                  ? isLight ? 'bg-slate-900 text-white border-slate-900 font-bold' : 'bg-white text-black border-stone-200 font-bold'
+                  : isLight ? 'bg-white hover:bg-slate-100 text-slate-800 border-slate-300' : 'bg-[#121214] hover:bg-[#18181b] text-zinc-200 border-[#27272a]'
               }`}
               title="Toggle AI Analyst Panel"
             >
@@ -350,14 +379,14 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
           {onToggleInspector && (
             <button
               onClick={onToggleInspector}
-              className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-sm transition border cursor-pointer ${
+              className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-sm transition border cursor-pointer shadow-sm ${
                 isInspectorOpen
-                  ? 'bg-white dark:bg-white light:bg-slate-900 text-black dark:text-black light:text-white border-stone-200 dark:border-stone-200 light:border-slate-900 font-bold shadow-sm'
-                  : 'bg-[#121214] dark:bg-[#121214] light:bg-white hover:bg-[#18181b] dark:hover:bg-[#18181b] light:hover:bg-slate-50 text-zinc-200 dark:text-zinc-200 light:text-slate-700 border-[#27272a] dark:border-[#27272a] light:border-slate-300 shadow-sm'
+                  ? isLight ? 'bg-slate-900 text-white border-slate-900 font-bold' : 'bg-white text-black border-stone-200 font-bold'
+                  : isLight ? 'bg-white hover:bg-slate-100 text-slate-800 border-slate-300' : 'bg-[#121214] hover:bg-[#18181b] text-zinc-200 border-[#27272a]'
               }`}
               title="Toggle Inspector Drawer"
             >
-              <Info className="w-3.5 h-3.5 text-zinc-300 dark:text-zinc-300 light:text-slate-600" />
+              <Info className={`w-3.5 h-3.5 ${isLight ? 'text-slate-600' : 'text-zinc-300'}`} />
               <span>Inspector</span>
             </button>
           )}
@@ -365,13 +394,17 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
           {/* Quick Light/Dark Mode Switcher */}
           <button
             onClick={toggleTheme}
-            className="flex items-center justify-center p-2 rounded-sm border border-[#27272a] dark:border-[#27272a] light:border-slate-300 bg-[#121214] dark:bg-[#121214] light:bg-white text-zinc-200 dark:text-zinc-200 light:text-slate-800 hover:bg-[#18181b] dark:hover:bg-[#18181b] light:hover:bg-slate-100 transition cursor-pointer shadow-sm ml-1"
-            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+            className={`flex items-center justify-center p-2 rounded-sm border transition cursor-pointer shadow-sm ml-1 ${
+              isLight
+                ? 'bg-white border-slate-300 text-slate-800 hover:bg-slate-100'
+                : 'bg-[#121214] border-[#27272a] text-zinc-200 hover:bg-[#18181b]'
+            }`}
+            title={`Switch to ${isLight ? 'Dark' : 'Light'} Mode`}
           >
-            {theme === 'dark' ? (
-              <Sun className="w-3.5 h-3.5 text-amber-400" />
-            ) : (
+            {isLight ? (
               <Moon className="w-3.5 h-3.5 text-sky-600" />
+            ) : (
+              <Sun className="w-3.5 h-3.5 text-amber-400" />
             )}
           </button>
         </div>

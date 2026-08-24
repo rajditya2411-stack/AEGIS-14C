@@ -68,6 +68,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   scanLogs = []
 }) => {
   const { theme, toggleTheme } = useTheme();
+  const isLight = theme === 'light';
   const [consoleSectionOpen, setConsoleSectionOpen] = useState(true);
   const [filterSectionOpen, setFilterSectionOpen] = useState(true);
 
@@ -80,13 +81,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const logsToDisplay = scanLogs.length > 0 ? scanLogs : defaultConsoleLogs;
 
   return (
-    <div className="flex h-screen select-none shrink-0 border-r border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] bg-[#09090b] dark:bg-[#09090b] light:bg-[#ffffff] z-20 font-sans transition-colors duration-200">
+    <div className={`flex h-screen select-none shrink-0 border-r z-20 font-sans transition-colors duration-200 ${
+      isLight ? 'bg-white border-slate-200 text-slate-900' : 'bg-[#09090b] border-[#27272a] text-zinc-100'
+    }`}>
       {/* Leftmost Slim Navigation Icon Strip */}
-      <aside className="w-14 bg-[#09090b] dark:bg-[#09090b] light:bg-[#ffffff] border-r border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] flex flex-col items-center justify-between py-3.5 transition-colors duration-200">
+      <aside className={`w-14 border-r flex flex-col items-center justify-between py-3.5 transition-colors duration-200 ${
+        isLight ? 'bg-[#f8fafc] border-slate-200' : 'bg-[#09090b] border-[#27272a]'
+      }`}>
         <div className="space-y-6 flex flex-col items-center">
           {/* Logo Badge matching target design */}
-          <div className="w-9 h-9 rounded-sm border border-stone-200 dark:border-stone-200 light:border-slate-300 bg-white dark:bg-white light:bg-slate-900 flex items-center justify-center text-black dark:text-black light:text-white shadow-sm cursor-pointer">
-            <ShieldAlert className="w-5 h-5" />
+          <div className={`w-9 h-9 rounded-sm border flex items-center justify-center shadow-sm cursor-pointer ${
+            isLight ? 'border-slate-300 bg-white text-slate-900' : 'border-stone-200 bg-white text-black'
+          }`}>
+            <ShieldAlert className="w-5 h-5 text-black" />
           </div>
 
           {/* Navigation Icons (1st: Workspace, 2nd: Timeline, 3rd: Snapshots) */}
@@ -95,8 +102,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => onSelectNav('workspace')}
               className={`w-9 h-9 rounded-sm flex items-center justify-center transition-all cursor-pointer ${
                 currentView === 'workspace'
-                  ? 'bg-white dark:bg-white light:bg-slate-900 text-black dark:text-black light:text-white font-bold shadow-sm'
-                  : 'text-zinc-400 dark:text-zinc-400 light:text-slate-500 hover:bg-[#18181b] dark:hover:bg-[#18181b] light:hover:bg-slate-100 hover:text-white dark:hover:text-white light:hover:text-slate-900'
+                  ? isLight ? 'bg-slate-900 text-white font-bold shadow-sm' : 'bg-white text-black font-bold shadow-sm'
+                  : isLight ? 'text-slate-600 hover:bg-slate-200 hover:text-slate-900' : 'text-zinc-400 hover:bg-[#18181b] hover:text-white'
               }`}
               title="Workspace Graph"
             >
@@ -107,8 +114,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => onSelectNav('timeline')}
               className={`w-9 h-9 rounded-sm flex items-center justify-center transition-all cursor-pointer ${
                 currentView === 'timeline'
-                  ? 'bg-white dark:bg-white light:bg-slate-900 text-black dark:text-black light:text-white font-bold shadow-sm'
-                  : 'text-zinc-400 dark:text-zinc-400 light:text-slate-500 hover:bg-[#18181b] dark:hover:bg-[#18181b] light:hover:bg-slate-100 hover:text-white dark:hover:text-white light:hover:text-slate-900'
+                  ? isLight ? 'bg-slate-900 text-white font-bold shadow-sm' : 'bg-white text-black font-bold shadow-sm'
+                  : isLight ? 'text-slate-600 hover:bg-slate-200 hover:text-slate-900' : 'text-zinc-400 hover:bg-[#18181b] hover:text-white'
               }`}
               title="Investigation Timeline"
             >
@@ -119,8 +126,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => onSelectNav('snapshots')}
               className={`w-9 h-9 rounded-sm flex items-center justify-center transition-all cursor-pointer ${
                 currentView === 'snapshots'
-                  ? 'bg-white dark:bg-white light:bg-slate-900 text-black dark:text-black light:text-white font-bold shadow-sm'
-                  : 'text-zinc-400 dark:text-zinc-400 light:text-slate-500 hover:bg-[#18181b] dark:hover:bg-[#18181b] light:hover:bg-slate-100 hover:text-white dark:hover:text-white light:hover:text-slate-900'
+                  ? isLight ? 'bg-slate-900 text-white font-bold shadow-sm' : 'bg-white text-black font-bold shadow-sm'
+                  : isLight ? 'text-slate-600 hover:bg-slate-200 hover:text-slate-900' : 'text-zinc-400 hover:bg-[#18181b] hover:text-white'
               }`}
               title="Snapshots & Diff"
             >
@@ -133,28 +140,36 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="space-y-2">
           <button
             onClick={toggleTheme}
-            className="w-9 h-9 rounded-sm flex items-center justify-center text-zinc-400 dark:text-zinc-400 light:text-slate-600 hover:text-white dark:hover:text-white light:hover:text-slate-900 hover:bg-[#18181b] dark:hover:bg-[#18181b] light:hover:bg-slate-100 transition cursor-pointer"
-            title={`Toggle ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+            className={`w-9 h-9 rounded-sm flex items-center justify-center transition cursor-pointer ${
+              isLight ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-200' : 'text-zinc-400 hover:text-white hover:bg-[#18181b]'
+            }`}
+            title={`Toggle ${isLight ? 'Dark' : 'Light'} Mode`}
           >
-            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-sky-600" />}
+            {isLight ? <Moon className="w-4 h-4 text-sky-600" /> : <Sun className="w-4 h-4 text-amber-400" />}
           </button>
           <button
             onClick={onOpenSettings}
-            className="w-9 h-9 rounded-sm flex items-center justify-center text-zinc-400 dark:text-zinc-400 light:text-slate-600 hover:text-white dark:hover:text-white light:hover:text-slate-900 hover:bg-[#18181b] dark:hover:bg-[#18181b] light:hover:bg-slate-100 transition cursor-pointer"
+            className={`w-9 h-9 rounded-sm flex items-center justify-center transition cursor-pointer ${
+              isLight ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-200' : 'text-zinc-400 hover:text-white hover:bg-[#18181b]'
+            }`}
             title="Settings & User Account"
           >
             <Settings className="w-4 h-4" />
           </button>
           <button
             onClick={onOpenHelp}
-            className="w-9 h-9 rounded-sm flex items-center justify-center text-zinc-400 dark:text-zinc-400 light:text-slate-600 hover:text-white dark:hover:text-white light:hover:text-slate-900 hover:bg-[#18181b] dark:hover:bg-[#18181b] light:hover:bg-slate-100 transition cursor-pointer"
+            className={`w-9 h-9 rounded-sm flex items-center justify-center transition cursor-pointer ${
+              isLight ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-200' : 'text-zinc-400 hover:text-white hover:bg-[#18181b]'
+            }`}
             title="TRACE User Manual & Guide (?)"
           >
-            <HelpCircle className="w-4 h-4 text-sky-400" />
+            <HelpCircle className="w-4 h-4 text-sky-500" />
           </button>
           <button
             onClick={onOpenSettings}
-            className="w-9 h-9 rounded-sm flex items-center justify-center text-zinc-400 dark:text-zinc-400 light:text-slate-600 hover:text-rose-400 hover:bg-[#18181b] dark:hover:bg-[#18181b] light:hover:bg-slate-100 transition cursor-pointer"
+            className={`w-9 h-9 rounded-sm flex items-center justify-center transition cursor-pointer ${
+              isLight ? 'text-slate-600 hover:text-rose-600 hover:bg-slate-200' : 'text-zinc-400 hover:text-rose-400 hover:bg-[#18181b]'
+            }`}
             title="Account & Security"
           >
             <LogOut className="w-4 h-4" />
@@ -163,27 +178,37 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </aside>
 
       {/* Secondary Sidebar Panel matching target screenshot */}
-      <aside className="w-64 bg-[#09090b] dark:bg-[#09090b] light:bg-[#ffffff] flex flex-col h-screen overflow-hidden border-r border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] transition-colors duration-200">
+      <aside className={`w-64 flex flex-col h-screen overflow-hidden border-r transition-colors duration-200 ${
+        isLight ? 'bg-white border-slate-200' : 'bg-[#09090b] border-[#27272a]'
+      }`}>
         {/* Section Header: Case Management */}
-        <div className="p-3 border-b border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] flex items-center justify-between bg-[#0d0e14] dark:bg-[#0d0e14] light:bg-[#f8fafc]">
+        <div className={`p-3 border-b flex items-center justify-between ${
+          isLight ? 'bg-[#f8fafc] border-slate-200' : 'bg-[#0d0e14] border-[#27272a]'
+        }`}>
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-white dark:text-white light:text-slate-900 font-sans">
+              <span className={`text-xs font-bold font-sans ${isLight ? 'text-slate-900' : 'text-white'}`}>
                 Case Management
               </span>
-              <span className="text-[10px] text-zinc-500 dark:text-zinc-500 light:text-slate-400 font-mono ml-2">
+              <span className={`text-[10px] font-mono ml-2 ${isLight ? 'text-slate-400' : 'text-zinc-500'}`}>
                 (256px)
               </span>
             </div>
             <div className="flex items-center gap-1.5 mt-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-400 light:text-slate-500 font-mono">
+              <span className={`text-[10px] font-bold uppercase tracking-wider font-mono ${
+                isLight ? 'text-slate-500' : 'text-zinc-400'
+              }`}>
                 ACTIVE CASES ({investigations.length})
               </span>
             </div>
           </div>
           <button
             onClick={onNewCaseModal}
-            className="text-black dark:text-black light:text-slate-900 bg-white dark:bg-white light:bg-white hover:bg-stone-100 dark:hover:bg-stone-100 light:hover:bg-slate-100 p-1 transition rounded-sm cursor-pointer shadow-sm border border-stone-200 dark:border-stone-200 light:border-slate-300 flex items-center gap-1 text-[10px] font-bold font-mono px-1.5"
+            className={`p-1 transition rounded-sm cursor-pointer shadow-sm border flex items-center gap-1 text-[10px] font-bold font-mono px-1.5 ${
+              isLight
+                ? 'bg-white text-slate-900 hover:bg-slate-100 border-slate-300'
+                : 'bg-white text-black hover:bg-stone-100 border-stone-200'
+            }`}
             title="Create target investigation"
           >
             <Plus className="w-3 h-3 stroke-[3]" />
@@ -194,7 +219,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Active Cases Scrollable List */}
         <div className="p-2 space-y-2 flex-1 overflow-y-auto min-h-0 scrollbar-thin">
           {investigations.length === 0 ? (
-            <div className="text-center py-8 text-zinc-500 dark:text-zinc-500 light:text-slate-400 text-xs font-mono">
+            <div className={`text-center py-8 text-xs font-mono ${isLight ? 'text-slate-400' : 'text-zinc-500'}`}>
               No active cases.<br />Click "[+ Create Case]" to add one.
             </div>
           ) : (
@@ -211,34 +236,44 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   }}
                   className={`group p-3 rounded-sm cursor-pointer transition-all border relative ${
                     isActive && currentView === 'workspace'
-                      ? 'bg-[#18181b] dark:bg-[#18181b] light:bg-white border-white dark:border-white light:border-slate-900 text-white dark:text-white light:text-slate-900 shadow-sm ring-1 ring-white/20 dark:ring-white/20 light:ring-slate-900/20'
-                      : 'bg-[#121214] dark:bg-[#121214] light:bg-[#f8fafc] border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] text-zinc-400 dark:text-zinc-400 light:text-slate-700 hover:bg-[#18181b]/70 dark:hover:bg-[#18181b]/70 light:hover:bg-slate-100 hover:text-white dark:hover:text-white light:hover:text-slate-900'
+                      ? isLight
+                        ? 'bg-white border-slate-900 text-slate-900 shadow-md ring-1 ring-slate-900/30'
+                        : 'bg-[#18181b] border-white text-white shadow-sm ring-1 ring-white/20'
+                      : isLight
+                        ? 'bg-[#f8fafc] border-slate-200 text-slate-700 hover:bg-slate-100 hover:border-slate-300'
+                        : 'bg-[#121214] border-[#27272a] text-zinc-400 hover:bg-[#18181b]/70 hover:text-white'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-1">
-                    <h3 className="text-xs font-bold truncate text-white dark:text-white light:text-slate-900 font-mono flex-1">
+                    <h3 className={`text-xs font-bold truncate font-mono flex-1 ${isLight ? 'text-slate-900' : 'text-white'}`}>
                       Case: {inv.title}
                     </h3>
                     <div className="flex items-center gap-1 shrink-0 pt-0.5">
-                      {hasAlert && <AlertTriangle className="w-3 h-3 text-amber-400" />}
-                      <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                      {hasAlert && <AlertTriangle className="w-3 h-3 text-amber-500" />}
+                      <CheckCircle2 className="w-3 h-3 text-emerald-500" />
                     </div>
                   </div>
 
-                  <p className="text-[11px] text-zinc-300 dark:text-zinc-300 light:text-slate-600 truncate mt-1 font-mono">
-                    Target: <span className="text-white dark:text-white light:text-slate-900 font-semibold">{inv.target}</span>
+                  <p className={`text-[11px] truncate mt-1 font-mono ${isLight ? 'text-slate-600' : 'text-zinc-300'}`}>
+                    Target: <span className={`font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>{inv.target}</span>
                   </p>
 
                   <div className="mt-1.5 flex flex-wrap gap-1 items-center">
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-sm bg-zinc-800 dark:bg-zinc-800 light:bg-slate-200 text-zinc-200 dark:text-zinc-200 light:text-slate-800">
+                    <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-sm ${
+                      isLight ? 'bg-slate-200 text-slate-800' : 'bg-zinc-800 text-zinc-200'
+                    }`}>
                       Node Count: {inv.entity_count}
                     </span>
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-sm bg-zinc-800 dark:bg-zinc-800 light:bg-slate-200 text-zinc-300 dark:text-zinc-300 light:text-slate-700">
+                    <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-sm ${
+                      isLight ? 'bg-slate-200 text-slate-700' : 'bg-zinc-800 text-zinc-300'
+                    }`}>
                       Type: {inv.type || 'FINANCIAL_FRAUD'}
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-[#27272a] dark:border-[#27272a] light:border-slate-200 text-[9px] text-zinc-400 dark:text-zinc-400 light:text-slate-500 font-mono">
+                  <div className={`flex items-center justify-between mt-2 pt-1.5 border-t text-[9px] font-mono ${
+                    isLight ? 'border-slate-200 text-slate-500' : 'border-[#27272a] text-zinc-400'
+                  }`}>
                     <span>{inv.relationship_count} edges</span>
                     <button
                       onClick={(e) => {
@@ -247,7 +282,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           onDeleteCase(inv.id);
                         }
                       }}
-                      className="opacity-70 group-hover:opacity-100 text-zinc-400 dark:text-zinc-400 light:text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 p-1 rounded-sm transition cursor-pointer"
+                      className={`opacity-70 group-hover:opacity-100 p-1 rounded-sm transition cursor-pointer ${
+                        isLight ? 'text-slate-500 hover:text-rose-600 hover:bg-rose-50' : 'text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10'
+                      }`}
                       title="Delete case"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -260,17 +297,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Section Header: LIVE SCRAPER CONSOLE */}
-        <div className="border-t border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] bg-[#09090b] dark:bg-[#09090b] light:bg-[#ffffff]">
+        <div className={`border-t ${isLight ? 'border-slate-200 bg-white' : 'border-[#27272a] bg-[#09090b]'}`}>
           <button
             onClick={() => setConsoleSectionOpen(!consoleSectionOpen)}
-            className="w-full p-3 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-400 light:text-slate-600 font-mono hover:text-white dark:hover:text-white light:hover:text-slate-900 transition cursor-pointer"
+            className={`w-full p-3 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider font-mono transition cursor-pointer ${
+              isLight ? 'text-slate-600 hover:text-slate-900' : 'text-zinc-400 hover:text-white'
+            }`}
           >
             <div className="flex items-center gap-2">
               <span>Live Scraper Console</span>
               {isScanning ? (
-                <Loader2 className="w-3 h-3 text-amber-400 animate-spin" />
+                <Loader2 className="w-3 h-3 text-amber-500 animate-spin" />
               ) : (
-                <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-sm" />
+                <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-sm" />
               )}
             </div>
             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${consoleSectionOpen ? '' : '-rotate-90'}`} />
@@ -278,11 +317,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           {consoleSectionOpen && (
             <div className="px-3 pb-3">
-              <div className="bg-[#07080f] dark:bg-[#07080f] light:bg-[#f8fafc] border border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] rounded-sm p-2.5 h-28 overflow-y-auto font-mono text-[10px] space-y-1.5 scrollbar-thin">
+              <div className={`border rounded-sm p-2.5 h-28 overflow-y-auto font-mono text-[10px] space-y-1.5 scrollbar-thin ${
+                isLight ? 'bg-[#f8fafc] border-slate-200' : 'bg-[#07080f] border-[#27272a]'
+              }`}>
                 {logsToDisplay.map((log, index) => (
                   <div key={index} className="leading-relaxed flex items-start gap-1.5">
-                    <span className="text-zinc-500 dark:text-zinc-500 light:text-slate-400 shrink-0">&gt;</span>
-                    <span className={log.includes('COMPLETE') || log.includes('SUCCESS') ? 'text-emerald-400 dark:text-emerald-400 light:text-emerald-600 font-semibold' : log.includes('Scanning') || log.includes('Collector') ? 'text-sky-400 dark:text-sky-400 light:text-sky-600' : 'text-zinc-300 dark:text-zinc-300 light:text-slate-800'}>
+                    <span className={`shrink-0 ${isLight ? 'text-slate-400' : 'text-zinc-500'}`}>&gt;</span>
+                    <span className={log.includes('COMPLETE') || log.includes('SUCCESS') ? (isLight ? 'text-emerald-600 font-semibold' : 'text-emerald-400 font-semibold') : log.includes('Scanning') || log.includes('Collector') ? (isLight ? 'text-sky-600' : 'text-sky-400') : (isLight ? 'text-slate-800' : 'text-zinc-300')}>
                       {log}
                     </span>
                   </div>
@@ -293,10 +334,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Section Header: FILTERS */}
-        <div className="border-t border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] bg-[#09090b] dark:bg-[#09090b] light:bg-[#ffffff]">
+        <div className={`border-t ${isLight ? 'border-slate-200 bg-white' : 'border-[#27272a] bg-[#09090b]'}`}>
           <button
             onClick={() => setFilterSectionOpen(!filterSectionOpen)}
-            className="w-full p-3 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-400 light:text-slate-600 font-mono hover:text-white dark:hover:text-white light:hover:text-slate-900 transition cursor-pointer"
+            className={`w-full p-3 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider font-mono transition cursor-pointer ${
+              isLight ? 'text-slate-600 hover:text-slate-900' : 'text-zinc-400 hover:text-white'
+            }`}
           >
             <span>FILTERS</span>
             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${filterSectionOpen ? '' : '-rotate-90'}`} />
@@ -310,16 +353,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <div
                     key={type}
                     onClick={() => onToggleFilter(type)}
-                    className="flex items-center justify-between text-xs text-zinc-300 dark:text-zinc-300 light:text-slate-700 cursor-pointer py-1 px-1.5 rounded-sm hover:bg-[#18181b] dark:hover:bg-[#18181b] light:hover:bg-slate-100 transition"
+                    className={`flex items-center justify-between text-xs cursor-pointer py-1 px-1.5 rounded-sm transition ${
+                      isLight ? 'text-slate-700 hover:bg-slate-100' : 'text-zinc-300 hover:bg-[#18181b]'
+                    }`}
                   >
                     <span className="flex items-center gap-2">
-                      <Icon className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-400 light:text-slate-500" />
-                      <span className="text-xs font-medium text-zinc-200 dark:text-zinc-200 light:text-slate-800">{label}</span>
+                      <Icon className={`w-3.5 h-3.5 ${isLight ? 'text-slate-500' : 'text-zinc-400'}`} />
+                      <span className={`text-xs font-medium ${isLight ? 'text-slate-800' : 'text-zinc-200'}`}>{label}</span>
                     </span>
 
                     <div
                       className={`w-7 h-4 rounded-full p-0.5 transition-colors ${
-                        isSelected ? 'bg-sky-500' : 'bg-[#27272a] dark:bg-[#27272a] light:bg-slate-300'
+                        isSelected ? 'bg-sky-500' : isLight ? 'bg-slate-300' : 'bg-[#27272a]'
                       }`}
                     >
                       <div
