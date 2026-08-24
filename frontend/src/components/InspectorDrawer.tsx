@@ -329,6 +329,30 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                   </div>
                 )}
 
+                {/* Associated Assets Quick-Copy List for Target Node */}
+                {selectedEntity.metadata_json?.is_target && (
+                  <div className="bg-[#121214] border border-[#27272a] rounded-lg p-3 space-y-3">
+                    <span className="text-[10px] font-mono uppercase text-cyan-400 font-bold block">
+                      Target Case Connected Assets ({allEntities.length})
+                    </span>
+                    <div className="space-y-2 max-h-60 overflow-y-auto scrollbar-thin pr-1">
+                      {allEntities.map((ent) => (
+                        <div key={ent.id} className="flex items-center justify-between p-1.5 rounded bg-[#18181b] border border-[#27272a] gap-2">
+                          <div className="min-w-0 flex-1">
+                            <span className="text-[9px] font-mono px-1 rounded bg-sky-950 text-sky-400 border border-sky-500/20 mr-1.5">
+                              {ent.entity_type}
+                            </span>
+                            <span className="text-[11px] font-mono text-zinc-200 truncate inline-block max-w-[120px] align-middle">
+                              {ent.value}
+                            </span>
+                          </div>
+                          <CopyButton text={ent.value} className="bg-[#121214] hover:bg-zinc-800 border border-zinc-800" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <button
                   onClick={() => onDeleteEntity(selectedEntity.id)}
                   className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold py-2 rounded-md bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-500/40 transition cursor-pointer"
@@ -337,9 +361,54 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                 </button>
               </>
             ) : (
-              <div className="text-center py-10 text-zinc-500 text-xs">
-                <Info className="w-6 h-6 mx-auto mb-2 text-zinc-600" />
-                <p>Select any node on the React Flow canvas to inspect its parameters, relationships, and threat attributes.</p>
+              // When no node is selected, show Case Metadata + Associated Assets list for the entire investigation
+              <div className="space-y-4">
+                <div className="bg-[#121214] border border-[#27272a] rounded-lg p-3 space-y-2">
+                  <span className="text-[10px] font-mono uppercase text-zinc-500 font-bold block">Case Information</span>
+                  <div className="space-y-1 text-xs font-mono">
+                    <div className="flex justify-between border-b border-zinc-800 pb-1">
+                      <span className="text-zinc-500">Title:</span>
+                      <span className="text-zinc-200 font-semibold truncate max-w-[140px]">{activeCase?.title || 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-zinc-800 pb-1">
+                      <span className="text-zinc-500">Target Target:</span>
+                      <span className="text-zinc-200 truncate max-w-[140px]">{activeCase?.target || 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-zinc-800 pb-1">
+                      <span className="text-zinc-500">Case Type:</span>
+                      <span className="text-zinc-200 truncate max-w-[140px]">{activeCase?.type || 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-zinc-500">Status:</span>
+                      <span className="text-emerald-400 font-bold">{activeCase?.status || 'Active'}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-[#121214] border border-[#27272a] rounded-lg p-3 space-y-3">
+                  <span className="text-[10px] font-mono uppercase text-cyan-400 font-bold block">
+                    Associated Assets List ({allEntities.length})
+                  </span>
+                  <div className="space-y-2 max-h-80 overflow-y-auto scrollbar-thin pr-1">
+                    {allEntities.length === 0 ? (
+                      <p className="text-xs text-zinc-500 font-mono">No nodes available in this case.</p>
+                    ) : (
+                      allEntities.map((ent) => (
+                        <div key={ent.id} className="flex items-center justify-between p-1.5 rounded bg-[#18181b] border border-[#27272a] gap-2">
+                          <div className="min-w-0 flex-1">
+                            <span className="text-[9px] font-mono px-1 rounded bg-sky-950 text-sky-400 border border-sky-500/20 mr-1.5">
+                              {ent.entity_type}
+                            </span>
+                            <span className="text-[11px] font-mono text-zinc-200 truncate inline-block max-w-[120px] align-middle">
+                              {ent.value}
+                            </span>
+                          </div>
+                          <CopyButton text={ent.value} className="bg-[#121214] hover:bg-zinc-800 border border-zinc-800" />
+                        </div>
+                      ))}
+                    )}
+                  </div>
+                </div>
               </div>
             )}
           </div>
