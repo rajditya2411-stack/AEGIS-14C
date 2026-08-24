@@ -243,16 +243,16 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
             <button
               onClick={onOpenComplaintModal}
               disabled={agentState.isStreaming}
-              className="flex items-center gap-1.5 text-xs font-bold bg-[#f5f5f4] hover:bg-white text-zinc-950 px-3.5 py-2 rounded-md transition shadow-sm border border-stone-200 cursor-pointer disabled:opacity-50"
+              className="flex items-center gap-1.5 text-xs font-bold bg-white hover:bg-stone-100 text-black px-3.5 py-2 rounded-sm transition shadow-sm border border-stone-200 cursor-pointer disabled:opacity-50"
             >
               {agentState.isStreaming ? (
                 <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-950" />
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-black" />
                   <span>Streaming Triage...</span>
                 </>
               ) : (
                 <>
-                  <Play className="w-3.5 h-3.5 fill-current text-zinc-950" />
+                  <Play className="w-3.5 h-3.5 fill-current text-black" />
                   <span>+ Ingest Complaint</span>
                 </>
               )}
@@ -263,10 +263,10 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
           <button
             onClick={onTriggerScan}
             disabled={isScanning || !activeCase}
-            className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-md transition border cursor-pointer ${
+            className={`flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-sm transition border cursor-pointer ${
               isScanning
                 ? 'bg-amber-950/60 border-amber-500/50 text-amber-300'
-                : 'bg-[#121214] hover:bg-[#18181b] text-zinc-200 border-[#27272a]'
+                : 'bg-white hover:bg-stone-100 text-black border-stone-200 shadow-sm'
             }`}
           >
             {isScanning ? (
@@ -276,7 +276,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
               </>
             ) : (
               <>
-                <Radio className="w-3.5 h-3.5 text-sky-400" />
+                <Radio className="w-3.5 h-3.5 text-black" />
                 <span>Probe OSINT</span>
               </>
             )}
@@ -286,28 +286,28 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
           {activeCase && (
             <button
               onClick={() => downloadLegalFreezeNoticePDF(activeCase.id)}
-              className="flex items-center gap-1.5 text-xs font-bold bg-indigo-950/80 hover:bg-indigo-900/90 text-indigo-300 border border-indigo-500/40 px-3 py-2 rounded-md transition shadow-sm cursor-pointer"
+              className="flex items-center gap-1.5 text-xs font-bold bg-indigo-950/80 hover:bg-indigo-900/90 text-indigo-200 border border-indigo-500/40 px-3 py-2 rounded-sm transition shadow-sm cursor-pointer"
               title="Download Statutory Section 106 BNSS Bank Freeze Notice (PDF)"
             >
-              <Scale className="w-3.5 h-3.5 text-indigo-400" />
+              <Scale className="w-3.5 h-3.5 text-indigo-300" />
               <span>Sec 106 Notice</span>
             </button>
           )}
 
           <button
             onClick={onOpenNewEntityModal}
-            className="flex items-center gap-1.5 text-xs font-semibold bg-[#121214] hover:bg-[#18181b] text-white border border-[#27272a] px-3 py-2 rounded-md transition cursor-pointer"
+            className="flex items-center gap-1.5 text-xs font-bold bg-white hover:bg-stone-100 text-black border border-stone-200 px-3 py-2 rounded-sm transition cursor-pointer shadow-sm"
           >
-            <Plus className="w-3.5 h-3.5 text-zinc-400" /> + Add Node
+            <Plus className="w-3.5 h-3.5 text-black stroke-[3]" /> + Add Node
           </button>
 
           {onToggleAIChat && (
             <button
               onClick={onToggleAIChat}
-              className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-md transition border cursor-pointer ${
+              className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-sm transition border cursor-pointer ${
                 isAIChatOpen
-                  ? 'bg-[#27272a] border-[#3f3f46] text-white'
-                  : 'bg-[#121214] hover:bg-[#18181b] text-zinc-300 border-[#27272a]'
+                  ? 'bg-white text-black border-stone-200 font-bold shadow-sm'
+                  : 'bg-[#121214] hover:bg-[#18181b] text-zinc-200 border-[#27272a]'
               }`}
               title="Toggle AI Analyst Panel"
             >
@@ -319,14 +319,17 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
           {onToggleInspector && (
             <button
               onClick={onToggleInspector}
-              className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-md transition border cursor-pointer ${
+              className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-sm transition border cursor-pointer ${
                 isInspectorOpen
-                  ? 'bg-[#27272a] border-[#3f3f46] text-white'
-                  : 'bg-[#121214] hover:bg-[#18181b] text-zinc-300 border-[#27272a]'
+                  ? 'bg-white text-black border-stone-200 font-bold shadow-sm'
+                  : 'bg-[#121214] hover:bg-[#18181b] text-zinc-200 border-[#27272a]'
               }`}
               title="Toggle Inspector Drawer"
             >
-              <Info className="w-3.5 h-3.5 text-sky-400" />
+              <Info className="w-3.5 h-3.5 text-zinc-300" />
+              <span>Inspector</span>
+            </button>
+          )}
               <span>Inspector</span>
             </button>
           )}

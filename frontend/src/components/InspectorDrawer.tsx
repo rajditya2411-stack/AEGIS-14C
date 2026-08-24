@@ -453,14 +453,14 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                 </div>
 
                 {/* Add New Edge Form */}
-                <form onSubmit={handleAddRelationship} className="bg-[#121214] border border-[#27272a] rounded-lg p-3 space-y-3">
-                  <span className="text-[10px] font-mono uppercase text-zinc-400 font-bold block">+ Link to Another Node</span>
+                <form onSubmit={handleAddRelationship} className="bg-[#121214] border border-[#27272a] rounded-sm p-3 space-y-3">
+                  <span className="text-[10px] font-mono uppercase text-white font-bold block">+ Link to Another Node</span>
                   <div>
-                    <label className="text-[10px] text-zinc-500 font-mono block mb-1">Target Entity:</label>
+                    <label className="text-[10px] text-zinc-400 font-mono block mb-1">Target Entity:</label>
                     <select
                       value={targetEntityId}
                       onChange={(e) => setTargetEntityId(e.target.value)}
-                      className="w-full bg-[#18181b] border border-[#27272a] rounded p-1.5 text-xs text-zinc-200 focus:outline-none focus:border-sky-500"
+                      className="w-full bg-[#18181b] border border-[#27272a] rounded-sm p-1.5 text-xs text-zinc-200 focus:outline-none focus:border-white"
                     >
                       <option value="">Select target node...</option>
                       {allEntities.filter((e) => e.id !== selectedEntity.id).map((e) => (
@@ -469,19 +469,19 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                     </select>
                   </div>
                   <div>
-                    <label className="text-[10px] text-zinc-500 font-mono block mb-1">Relation Type:</label>
+                    <label className="text-[10px] text-zinc-400 font-mono block mb-1">Relation Type:</label>
                     <input
                       type="text"
                       value={relationType}
                       onChange={(e) => setRelationType(e.target.value)}
                       placeholder="e.g. transfers_funds_to"
-                      className="w-full bg-[#18181b] border border-[#27272a] rounded p-1.5 text-xs text-zinc-200 focus:outline-none focus:border-sky-500 font-mono"
+                      className="w-full bg-[#18181b] border border-[#27272a] rounded-sm p-1.5 text-xs text-white focus:outline-none focus:border-white font-mono"
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={!targetEntityId}
-                    className="w-full py-1.5 bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white rounded text-xs font-semibold transition"
+                    className="w-full py-2 bg-white text-black hover:bg-stone-100 disabled:opacity-50 font-bold rounded-sm text-xs transition border border-stone-200 shadow-sm cursor-pointer"
                   >
                     Create Connection
                   </button>
@@ -510,9 +510,9 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
               <button
                 onClick={() => handleExportLegalNotice()}
                 disabled={isExportingNotice}
-                className="flex items-center gap-1 px-2.5 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold transition shadow-sm cursor-pointer disabled:opacity-50"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-sm bg-white text-black hover:bg-stone-100 border border-stone-200 text-[11px] font-bold transition shadow-sm cursor-pointer disabled:opacity-50"
               >
-                {isExportingNotice ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
+                {isExportingNotice ? <Loader2 className="w-3 h-3 animate-spin text-black" /> : <Download className="w-3 h-3 text-black" />}
                 <span>Export PDF</span>
               </button>
             </div>

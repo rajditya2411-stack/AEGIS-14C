@@ -275,7 +275,7 @@ export const CustomEntityNode = memo(({ data, selected }: CustomNodeProps) => {
       </div>
 
       {/* Label Underneath Node */}
-      <div className="mt-1.5 px-2.5 py-1 rounded-md bg-[#121214]/95 border border-[#27272a] backdrop-blur-md shadow-lg text-center max-w-[180px]">
+      <div className="mt-1.5 px-2.5 py-1 rounded-sm bg-[#121214]/95 border border-[#27272a] backdrop-blur-md shadow-lg text-center max-w-[180px]">
         <span className="text-[9px] font-mono uppercase tracking-wider block text-zinc-400 font-bold">
           {data.entity_type.replace('_', ' ')}
         </span>

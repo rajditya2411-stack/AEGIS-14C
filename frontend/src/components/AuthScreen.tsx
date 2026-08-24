@@ -96,16 +96,16 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
       <div className="absolute w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-3xl pointer-events-none -bottom-20 -right-20" />
 
       {/* Main Authentication Box */}
-      <div className="w-full max-w-md bg-[#121214] border border-[#27272a] rounded-lg shadow-2xl overflow-hidden relative z-10 animate-in fade-in zoom-in-95 duration-200">
+      <div className="w-full max-w-md bg-[#121214] border border-[#27272a] rounded-sm shadow-2xl overflow-hidden relative z-10 animate-in fade-in zoom-in-95 duration-200">
         {/* Brand Banner */}
         <div className="p-6 border-b border-[#27272a] bg-[#18181b] text-center space-y-2">
-          <div className="w-12 h-12 rounded-md bg-[#27272a] border border-[#3f3f46] flex items-center justify-center text-white mx-auto shadow-sm">
-            <ShieldAlert className="w-6 h-6 text-sky-400" />
+          <div className="w-12 h-12 rounded-sm bg-white border border-stone-200 flex items-center justify-center text-black mx-auto shadow-sm">
+            <ShieldAlert className="w-6 h-6 text-black" />
           </div>
           <div>
             <h1 className="text-base font-bold text-white tracking-wide font-mono flex items-center justify-center gap-2">
               TRACE OSINT PLATFORM
-              <span className="text-[10px] font-mono bg-sky-950/80 text-sky-300 border border-sky-800/60 px-1.5 py-0.5 rounded">
+              <span className="text-[10px] font-mono bg-white text-black font-bold border border-stone-200 px-1.5 py-0.5 rounded-sm">
                 v3.5
               </span>
             </h1>
@@ -123,9 +123,9 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
               setMode('login');
               setError(null);
             }}
-            className={`py-2 px-3 rounded-md text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
+            className={`py-2 px-3 rounded-sm text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer ${
               mode === 'login'
-                ? 'bg-[#27272a] text-white border border-[#3f3f46] shadow-sm'
+                ? 'bg-white text-black border border-stone-200 shadow-sm'
                 : 'text-zinc-400 hover:text-white border border-transparent'
             }`}
           >
@@ -137,9 +137,9 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
               setMode('register');
               setError(null);
             }}
-            className={`py-2 px-3 rounded-md text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
+            className={`py-2 px-3 rounded-sm text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer ${
               mode === 'register'
-                ? 'bg-[#27272a] text-white border border-[#3f3f46] shadow-sm'
+                ? 'bg-white text-black border border-stone-200 shadow-sm'
                 : 'text-zinc-400 hover:text-white border border-transparent'
             }`}
           >
@@ -150,7 +150,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 bg-rose-950/40 border border-rose-500/40 rounded-md text-xs text-rose-300 flex items-start gap-2">
+            <div className="p-3 bg-rose-950/40 border border-rose-500/40 rounded-sm text-xs text-rose-300 flex items-start gap-2">
               <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
@@ -170,7 +170,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                     placeholder="e.g. Alex Mercer"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 rounded-md bg-[#18181b] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-sky-500 transition-colors"
+                    className="w-full pl-9 pr-3 py-2 rounded-sm bg-[#18181b] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
                   />
                 </div>
               </div>
@@ -182,7 +182,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="w-full px-3 py-2 rounded-md bg-[#18181b] border border-[#27272a] text-xs text-zinc-200 outline-none focus:border-sky-500 cursor-pointer"
+                  className="w-full px-3 py-2 rounded-sm bg-[#18181b] border border-[#27272a] text-xs text-zinc-200 outline-none focus:border-white cursor-pointer"
                 >
                   <option value="Lead Investigator">Lead Investigator</option>
                   <option value="Security Analyst">Security Analyst</option>
@@ -206,7 +206,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                 placeholder="analyst@tracex.osint"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 rounded-md bg-[#18181b] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-sky-500 transition-colors"
+                className="w-full pl-9 pr-3 py-2 rounded-sm bg-[#18181b] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
               />
             </div>
           </div>
@@ -224,7 +224,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                 placeholder="••••••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 rounded-md bg-[#18181b] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-sky-500 transition-colors"
+                className="w-full pl-9 pr-3 py-2 rounded-sm bg-[#18181b] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
               />
             </div>
           </div>
@@ -234,7 +234,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 px-4 rounded-md bg-white hover:bg-zinc-200 text-black font-semibold text-xs transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full py-2.5 px-4 rounded-sm bg-white hover:bg-stone-100 text-black font-bold text-xs transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 border border-stone-200"
             >
               {loading ? (
                 <>
@@ -260,9 +260,9 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
             type="button"
             onClick={handleUseDemo}
             disabled={loading}
-            className="flex items-center gap-1.5 text-xs text-sky-400 hover:text-sky-300 font-semibold transition cursor-pointer disabled:opacity-50"
+            className="flex items-center gap-1.5 text-xs text-black bg-white hover:bg-stone-100 px-3 py-1.5 rounded-sm font-bold border border-stone-200 transition cursor-pointer disabled:opacity-50 shadow-sm"
           >
-            <Sparkles className="w-3.5 h-3.5" />
+            <Sparkles className="w-3.5 h-3.5 text-black fill-current" />
             <span>1-Click Demo Account</span>
           </button>
         </div>

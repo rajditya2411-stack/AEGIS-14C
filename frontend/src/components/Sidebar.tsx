@@ -81,18 +81,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <aside className="w-14 bg-[#09090b] border-r border-[#27272a] flex flex-col items-center justify-between py-3.5">
         <div className="space-y-6 flex flex-col items-center">
           {/* Logo Badge matching target design */}
-          <div className="w-9 h-9 rounded-md border border-[#27272a] bg-[#121214] flex items-center justify-center text-zinc-100 shadow-sm cursor-pointer">
-            <ShieldAlert className="w-5 h-5" />
+          <div className="w-9 h-9 rounded-sm border border-stone-200 bg-white flex items-center justify-center text-black shadow-sm cursor-pointer">
+            <ShieldAlert className="w-5 h-5 text-black" />
           </div>
 
           {/* Navigation Icons (1st: Workspace, 2nd: Timeline, 3rd: Snapshots) */}
           <div className="space-y-2 pt-1">
             <button
               onClick={() => onSelectNav('workspace')}
-              className={`w-9 h-9 rounded-md flex items-center justify-center transition-all cursor-pointer ${
+              className={`w-9 h-9 rounded-sm flex items-center justify-center transition-all cursor-pointer ${
                 currentView === 'workspace'
-                  ? 'bg-[#27272a] text-white border border-[#3f3f46] shadow-sm'
-                  : 'text-zinc-400 hover:bg-[#18181b] hover:text-zinc-200'
+                  ? 'bg-white text-black font-bold shadow-sm'
+                  : 'text-zinc-400 hover:bg-[#18181b] hover:text-white'
               }`}
               title="Workspace Graph"
             >
@@ -101,10 +101,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
             <button
               onClick={() => onSelectNav('timeline')}
-              className={`w-9 h-9 rounded-md flex items-center justify-center transition-all cursor-pointer ${
+              className={`w-9 h-9 rounded-sm flex items-center justify-center transition-all cursor-pointer ${
                 currentView === 'timeline'
-                  ? 'bg-[#27272a] text-white border border-[#3f3f46] shadow-sm'
-                  : 'text-zinc-400 hover:bg-[#18181b] hover:text-zinc-200'
+                  ? 'bg-white text-black font-bold shadow-sm'
+                  : 'text-zinc-400 hover:bg-[#18181b] hover:text-white'
               }`}
               title="Investigation Timeline"
             >
@@ -113,10 +113,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
             <button
               onClick={() => onSelectNav('snapshots')}
-              className={`w-9 h-9 rounded-md flex items-center justify-center transition-all cursor-pointer ${
+              className={`w-9 h-9 rounded-sm flex items-center justify-center transition-all cursor-pointer ${
                 currentView === 'snapshots'
-                  ? 'bg-[#27272a] text-white border border-[#3f3f46] shadow-sm'
-                  : 'text-zinc-400 hover:bg-[#18181b] hover:text-zinc-200'
+                  ? 'bg-white text-black font-bold shadow-sm'
+                  : 'text-zinc-400 hover:bg-[#18181b] hover:text-white'
               }`}
               title="Snapshots & Diff"
             >
@@ -129,21 +129,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="space-y-2">
           <button
             onClick={onOpenSettings}
-            className="w-9 h-9 rounded-md flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#18181b] transition cursor-pointer"
+            className="w-9 h-9 rounded-sm flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#18181b] transition cursor-pointer"
             title="Settings & User Account"
           >
             <Settings className="w-4 h-4" />
           </button>
           <button
             onClick={onOpenHelp}
-            className="w-9 h-9 rounded-md flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#18181b] transition cursor-pointer"
+            className="w-9 h-9 rounded-sm flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#18181b] transition cursor-pointer"
             title="TRACE User Manual & Guide (?)"
           >
             <HelpCircle className="w-4 h-4 text-sky-400" />
           </button>
           <button
             onClick={onOpenSettings}
-            className="w-9 h-9 rounded-md flex items-center justify-center text-zinc-400 hover:text-rose-400 hover:bg-[#18181b] transition cursor-pointer"
+            className="w-9 h-9 rounded-sm flex items-center justify-center text-zinc-400 hover:text-rose-400 hover:bg-[#18181b] transition cursor-pointer"
             title="Account & Security"
           >
             <LogOut className="w-4 h-4" />
@@ -156,26 +156,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Section Header: ACTIVE CASES */}
         <div className="p-3 border-b border-[#27272a] flex items-center justify-between bg-[#0d0e14]">
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] font-black uppercase tracking-wider text-zinc-400 font-mono">
+            <span className="text-[10px] font-black uppercase tracking-wider text-white font-mono">
               ACTIVE CASES
             </span>
-            <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">
+            <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-sm bg-white text-black font-bold">
               {investigations.length}
             </span>
           </div>
           <div className="flex items-center gap-1">
             <button
               onClick={onNewCaseModal}
-              className="text-zinc-400 hover:text-white p-1 transition rounded hover:bg-[#18181b] cursor-pointer"
+              className="text-black bg-white hover:bg-stone-100 p-1 transition rounded-sm cursor-pointer shadow-sm"
               title="Create target investigation"
             >
-              <Plus className="w-3.5 h-3.5" />
+              <Plus className="w-3.5 h-3.5 font-bold stroke-[3]" />
             </button>
           </div>
         </div>
 
         {/* Active Cases Scrollable List */}
-        <div className="p-2.5 space-y-2 flex-1 overflow-y-auto min-h-0 scrollbar-thin">
+        <div className="p-2 space-y-1.5 flex-1 overflow-y-auto min-h-0 scrollbar-thin">
           {investigations.length === 0 ? (
             <div className="text-center py-8 text-zinc-500 text-xs font-mono">
               No active cases.<br />Click "+" to add one.
@@ -192,10 +192,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onSelectCase(inv.id);
                     onSelectNav('workspace');
                   }}
-                  className={`group p-2.5 rounded-lg cursor-pointer transition-all border relative ${
+                  className={`group p-2.5 rounded-sm cursor-pointer transition-all border relative ${
                     isActive && currentView === 'workspace'
-                      ? 'bg-[#18181b] border-[#3f3f46] text-white shadow-sm'
-                      : 'bg-[#121214] border-[#27272a] text-zinc-400 hover:bg-[#18181b]/70 hover:text-zinc-200'
+                      ? 'bg-[#18181b] border-white/60 text-white shadow-sm ring-1 ring-white/20'
+                      : 'bg-[#121214] border-[#27272a] text-zinc-400 hover:bg-[#18181b]/70 hover:text-white'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-1">
@@ -206,11 +206,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     </div>
                   </div>
 
-                  <p className="text-[10px] text-zinc-400 truncate mt-1 font-mono">
-                    Target: <span className="text-zinc-200">{inv.target}</span>
+                  <p className="text-[10px] text-zinc-300 truncate mt-1 font-mono">
+                    Target: <span className="text-white font-semibold">{inv.target}</span>
                   </p>
 
-                  <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-[#27272a] text-[9px] text-zinc-500 font-mono">
+                  <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-[#27272a] text-[9px] text-zinc-400 font-mono">
                     <span>{inv.entity_count} nodes • {inv.relationship_count} edges</span>
                     <button
                       onClick={(e) => {
@@ -219,7 +219,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           onDeleteCase(inv.id);
                         }
                       }}
-                      className="opacity-70 group-hover:opacity-100 text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 p-1 rounded transition cursor-pointer"
+                      className="opacity-70 group-hover:opacity-100 text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 p-1 rounded-sm transition cursor-pointer"
                       title="Delete case"
                     >
                       <Trash2 className="w-3.5 h-3.5" />

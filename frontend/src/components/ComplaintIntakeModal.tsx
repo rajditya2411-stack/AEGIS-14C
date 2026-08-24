@@ -112,24 +112,24 @@ export const ComplaintIntakeModal: React.FC<ComplaintIntakeModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-[#09090b] border border-[#27272a] rounded-xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+      <div className="bg-[#09090b] border border-[#27272a] rounded-sm w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
         {/* Header */}
         <div className="p-4 px-6 border-b border-[#27272a] flex items-center justify-between bg-[#0d0e14]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-violet-950/80 border border-violet-500/40 flex items-center justify-center text-violet-400 shadow-md">
-              <ShieldAlert className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-sm bg-white border border-stone-200 flex items-center justify-center text-black shadow-md">
+              <ShieldAlert className="w-5 h-5 text-black" />
             </div>
             <div>
               <h2 className="text-sm font-bold text-white flex items-center gap-2">
                 AEGIS-I4C Complaint Intake & Triage Station
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-sm bg-white text-black font-bold border border-stone-200">
                   MHA / I4C Portal
                 </span>
               </h2>
               <p className="text-xs text-zinc-400">Ingest raw Hinglish/English citizen complaints, extract IOCs & trigger autonomous multi-agent triage</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-zinc-400 hover:text-white p-1 rounded-md hover:bg-zinc-800 transition">
+          <button onClick={onClose} className="text-zinc-400 hover:text-white p-1 rounded-sm hover:bg-zinc-800 transition">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -322,7 +322,7 @@ export const ComplaintIntakeModal: React.FC<ComplaintIntakeModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-md text-xs font-semibold text-zinc-300 hover:text-white hover:bg-zinc-800 transition cursor-pointer"
+              className="px-4 py-2 rounded-sm text-xs font-semibold text-zinc-300 hover:text-white hover:bg-zinc-800 transition cursor-pointer"
             >
               Cancel
             </button>
@@ -330,9 +330,9 @@ export const ComplaintIntakeModal: React.FC<ComplaintIntakeModalProps> = ({
               type="button"
               onClick={handleSubmit}
               disabled={!rawText.trim() || isStreaming}
-              className="flex items-center gap-2 px-5 py-2 rounded-md text-xs font-bold bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-lg shadow-violet-900/30 transition cursor-pointer disabled:opacity-50"
+              className="flex items-center gap-2 px-5 py-2 rounded-sm text-xs font-bold bg-white text-black hover:bg-stone-100 shadow-sm border border-stone-200 transition cursor-pointer disabled:opacity-50"
             >
-              <Play className="w-3.5 h-3.5 fill-current" />
+              <Play className="w-3.5 h-3.5 fill-current text-black" />
               <span>Launch Autonomous Multi-Agent Triage</span>
             </button>
           </div>
