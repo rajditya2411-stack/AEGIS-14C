@@ -61,14 +61,9 @@ html.light ::-webkit-scrollbar-thumb:hover,
   background: #94a3b8;
 }
 
-/* React Flow custom styling - Dark HUD */
+/* React Flow custom styling - Always Obsidian Dark in both modes */
 .react-flow__background {
   background-color: #050506 !important;
-}
-
-html.light .react-flow__background,
-[data-theme="light"] .react-flow__background {
-  background-color: #ffffff !important;
 }
 
 .react-flow__controls {
@@ -77,13 +72,6 @@ html.light .react-flow__background,
   border-radius: 4px !important;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
   padding: 2px !important;
-}
-
-html.light .react-flow__controls,
-[data-theme="light"] .react-flow__controls {
-  background-color: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
 }
 
 .react-flow__controls-button {
@@ -99,13 +87,6 @@ html.light .react-flow__controls,
   border-radius: 2px !important;
   margin-bottom: 1px !important;
   transition: all 0.15s ease !important;
-}
-
-html.light .react-flow__controls-button,
-[data-theme="light"] .react-flow__controls-button {
-  background-color: #ffffff !important;
-  border-bottom: 1px solid #f1f5f9 !important;
-  color: #475569 !important;
 }
 
 .react-flow__controls-button:last-child {
@@ -124,29 +105,12 @@ html.light .react-flow__controls-button,
   color: #fafaf9 !important;
 }
 
-html.light .react-flow__controls-button:hover,
-[data-theme="light"] .react-flow__controls-button:hover {
-  background-color: #f1f5f9 !important;
-  color: #0f172a !important;
-}
-
 .react-flow__controls-button:active {
   background-color: #3f3f46 !important;
 }
 
-html.light .react-flow__controls-button:active,
-[data-theme="light"] .react-flow__controls-button:active {
-  background-color: #e2e8f0 !important;
-}
-
 .react-flow__edge-path {
   stroke: #3f3f46 !important;
-  stroke-width: 1.5px !important;
-}
-
-html.light .react-flow__edge-path,
-[data-theme="light"] .react-flow__edge-path {
-  stroke: #94a3b8 !important;
   stroke-width: 1.5px !important;
 }
 
@@ -157,19 +121,7 @@ html.light .react-flow__edge-path,
   font-family: monospace !important;
 }
 
-html.light .react-flow__edge-text,
-[data-theme="light"] .react-flow__edge-text {
-  fill: #1e293b !important;
-}
-
 .react-flow__edge-textbg {
   fill: #121214 !important;
   rx: 2px;
-}
-
-html.light .react-flow__edge-textbg,
-[data-theme="light"] .react-flow__edge-textbg {
-  fill: #ffffff !important;
-  stroke: #e2e8f0;
-  stroke-width: 1px;
 }

@@ -147,11 +147,16 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <div className="flex-1 h-screen relative bg-[#050506] dark:bg-[#050506] light:bg-[#ffffff] overflow-hidden select-none flex flex-col font-sans transition-colors duration-200">
+    <div className="flex-1 h-screen relative bg-[#050506] overflow-hidden select-none flex flex-col font-sans">
       {/* Top Header HUD Banner matching uploaded mockup */}
       <div className="bg-[#09090b] dark:bg-[#09090b] light:bg-[#ffffff] border-b border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] p-2.5 px-6 flex flex-wrap items-center justify-between z-10 shadow-sm gap-3 transition-colors duration-200">
         {/* Left: App Title / Case Info & Anomaly Badges */}
         <div className="flex items-center gap-3 flex-wrap">
+          {/* Brand Name */}
+          <span className="text-xs font-bold tracking-wide text-white dark:text-white light:text-slate-900 font-sans">
+            AEGIS-14C (TRACE)
+          </span>
+
           {/* Target Pill */}
           <div className="flex items-center gap-2 bg-[#121214] dark:bg-[#121214] light:bg-[#f1f5f9] border border-[#27272a] dark:border-[#27272a] light:border-[#e2e8f0] px-3.5 py-1.5 rounded-sm shadow-inner">
             <ShieldAlert className="w-4 h-4 text-violet-400 dark:text-violet-400 light:text-violet-600" />
@@ -373,7 +378,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
       </div>
 
       {/* React Flow Graph Engine */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative bg-[#050506]">
         <ReactFlow
           nodes={filteredNodes}
           edges={filteredEdges}
