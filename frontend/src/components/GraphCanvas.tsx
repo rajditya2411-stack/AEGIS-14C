@@ -243,16 +243,16 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
             <button
               onClick={onOpenComplaintModal}
               disabled={agentState.isStreaming}
-              className="flex items-center gap-1.5 text-xs font-bold bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white px-3.5 py-2 rounded-md transition shadow-md shadow-violet-950/50 cursor-pointer disabled:opacity-50"
+              className="flex items-center gap-1.5 text-xs font-bold bg-[#f5f5f4] hover:bg-white text-zinc-950 px-3.5 py-2 rounded-md transition shadow-sm border border-stone-200 cursor-pointer disabled:opacity-50"
             >
               {agentState.isStreaming ? (
                 <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-950" />
                   <span>Streaming Triage...</span>
                 </>
               ) : (
                 <>
-                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <Play className="w-3.5 h-3.5 fill-current text-zinc-950" />
                   <span>+ Ingest Complaint</span>
                 </>
               )}

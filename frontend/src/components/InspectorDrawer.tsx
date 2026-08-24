@@ -237,56 +237,56 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
       </div>
 
       {/* Tabs Navigation */}
-      <div className="flex border-b border-[#27272a] bg-[#09090b] text-[11px] overflow-x-auto scrollbar-none">
+      <div className="flex border-b border-[#27272a] bg-[#09090b] text-[11px] overflow-x-auto scrollbar-none font-mono">
         <button
           onClick={() => setActiveTab('details')}
-          className={`px-3 py-2.5 font-semibold border-b-2 flex items-center gap-1 transition cursor-pointer whitespace-nowrap ${
+          className={`px-3 py-2.5 font-bold border-b-2 flex items-center gap-1 transition cursor-pointer whitespace-nowrap ${
             activeTab === 'details'
-              ? 'border-sky-400 text-sky-400 bg-[#121214]'
-              : 'border-transparent text-zinc-400 hover:text-white'
+              ? 'border-stone-200 text-[#fafaf9] bg-[#121214]'
+              : 'border-transparent text-zinc-400 hover:text-zinc-200'
           }`}
         >
-          <Tag className="w-3 h-3" /> Node
+          <Tag className="w-3 h-3 text-stone-300" /> Node
         </button>
         <button
           onClick={() => setActiveTab('relationship')}
-          className={`px-3 py-2.5 font-semibold border-b-2 flex items-center gap-1 transition cursor-pointer whitespace-nowrap ${
+          className={`px-3 py-2.5 font-bold border-b-2 flex items-center gap-1 transition cursor-pointer whitespace-nowrap ${
             activeTab === 'relationship'
-              ? 'border-sky-400 text-sky-400 bg-[#121214]'
-              : 'border-transparent text-zinc-400 hover:text-white'
+              ? 'border-stone-200 text-[#fafaf9] bg-[#121214]'
+              : 'border-transparent text-zinc-400 hover:text-zinc-200'
           }`}
         >
-          <Share2 className="w-3 h-3" /> Graph
+          <Share2 className="w-3 h-3 text-stone-300" /> Graph
         </button>
         <button
           onClick={() => setActiveTab('legal')}
-          className={`px-3 py-2.5 font-semibold border-b-2 flex items-center gap-1 transition cursor-pointer whitespace-nowrap ${
+          className={`px-3 py-2.5 font-bold border-b-2 flex items-center gap-1 transition cursor-pointer whitespace-nowrap ${
             activeTab === 'legal'
-              ? 'border-indigo-400 text-indigo-300 bg-[#121214]'
-              : 'border-transparent text-zinc-400 hover:text-white'
+              ? 'border-stone-200 text-[#fafaf9] bg-[#121214]'
+              : 'border-transparent text-zinc-400 hover:text-zinc-200'
           }`}
         >
           <Scale className="w-3 h-3 text-indigo-400" /> Sec 106 BNSS ({legalDirectives.length})
         </button>
         <button
           onClick={() => setActiveTab('ledger')}
-          className={`px-3 py-2.5 font-semibold border-b-2 flex items-center gap-1 transition cursor-pointer whitespace-nowrap ${
+          className={`px-3 py-2.5 font-bold border-b-2 flex items-center gap-1 transition cursor-pointer whitespace-nowrap ${
             activeTab === 'ledger'
-              ? 'border-emerald-400 text-emerald-300 bg-[#121214]'
-              : 'border-transparent text-zinc-400 hover:text-white'
+              ? 'border-stone-200 text-[#fafaf9] bg-[#121214]'
+              : 'border-transparent text-zinc-400 hover:text-zinc-200'
           }`}
         >
           <Lock className="w-3 h-3 text-emerald-400" /> Ledger ({auditLedger.length})
         </button>
         <button
           onClick={() => setActiveTab('notes')}
-          className={`px-3 py-2.5 font-semibold border-b-2 flex items-center gap-1 transition cursor-pointer whitespace-nowrap ${
+          className={`px-3 py-2.5 font-bold border-b-2 flex items-center gap-1 transition cursor-pointer whitespace-nowrap ${
             activeTab === 'notes'
-              ? 'border-sky-400 text-sky-400 bg-[#121214]'
-              : 'border-transparent text-zinc-400 hover:text-white'
+              ? 'border-stone-200 text-[#fafaf9] bg-[#121214]'
+              : 'border-transparent text-zinc-400 hover:text-zinc-200'
           }`}
         >
-          <FileText className="w-3 h-3" /> Notes
+          <FileText className="w-3 h-3 text-stone-300" /> Notes
         </button>
       </div>
 
