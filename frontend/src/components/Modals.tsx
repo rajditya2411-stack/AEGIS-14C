@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Plus, FolderPlus, Globe } from 'lucide-react';
 import type { EntityType } from '../types';
+import { useTheme } from '../context/ThemeContext';
 
 interface NewCaseModalProps {
   isOpen: boolean;
@@ -9,6 +10,8 @@ interface NewCaseModalProps {
 }
 
 export const NewCaseModal: React.FC<NewCaseModalProps> = ({ isOpen, onClose, onSubmit }) => {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
   const [title, setTitle] = useState('');
   const [target, setTarget] = useState('');
   const [type, setType] = useState('Domain Investigation');
@@ -25,48 +28,67 @@ export const NewCaseModal: React.FC<NewCaseModalProps> = ({ isOpen, onClose, onS
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-[#0d1322] border border-[#1f293d] rounded-xl w-full max-w-md shadow-2xl overflow-hidden">
-        <div className="p-4 border-b border-[#1f293d] flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sky-400 font-semibold text-sm">
-            <FolderPlus className="w-4 h-4" /> Create New Investigation Case
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-sans select-none animate-in fade-in duration-150">
+      <div className={`border rounded-sm w-full max-w-md shadow-2xl overflow-hidden ${
+        isLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-[#121214] border-[#27272a] text-zinc-100'
+      }`}>
+        <div className={`p-4 border-b flex items-center justify-between ${
+          isLight ? 'bg-[#f8fafc] border-slate-200' : 'bg-[#18181b] border-[#27272a]'
+        }`}>
+          <div className="flex items-center gap-2 font-bold text-xs font-mono tracking-wide">
+            <FolderPlus className={`w-4 h-4 ${isLight ? 'text-sky-600' : 'text-sky-400'}`} />
+            <span className={isLight ? 'text-slate-900' : 'text-white'}>Create New Investigation Case</span>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-200">
+          <button onClick={onClose} className={`transition cursor-pointer ${
+            isLight ? 'text-slate-400 hover:text-slate-700' : 'text-zinc-400 hover:text-white'
+          }`}>
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">Case Title</label>
+            <label className={`block text-xs font-semibold mb-1 ${isLight ? 'text-slate-700' : 'text-slate-300'}`}>Case Title</label>
             <input
               type="text"
               placeholder="e.g. Example Corp Investigation"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 text-slate-100 text-xs rounded-lg p-2.5 focus:border-sky-500 focus:outline-none"
+              className={`w-full text-xs rounded-sm p-2.5 focus:outline-none border ${
+                isLight
+                  ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                  : 'bg-[#18181b] border-[#27272a] text-slate-100 focus:border-sky-500'
+              }`}
               required
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">Target</label>
+            <label className={`block text-xs font-semibold mb-1 ${isLight ? 'text-slate-700' : 'text-slate-300'}`}>Target</label>
             <input
               type="text"
               placeholder="e.g. hashicorp.com, elonmusk, or 192.168.1.1"
               value={target}
               onChange={(e) => setTarget(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 text-slate-100 text-xs rounded-lg p-2.5 focus:border-sky-500 focus:outline-none font-mono"
+              className={`w-full text-xs rounded-sm p-2.5 focus:outline-none font-mono border ${
+                isLight
+                  ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                  : 'bg-[#18181b] border-[#27272a] text-slate-100 focus:border-sky-500'
+              }`}
               required
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">Investigation Type</label>
+            <label className={`block text-xs font-semibold mb-1 ${isLight ? 'text-slate-700' : 'text-slate-300'}`}>Investigation Type</label>
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 text-slate-100 text-xs rounded-lg p-2.5 focus:border-sky-500 focus:outline-none"
+              className={`w-full text-xs rounded-sm p-2.5 focus:outline-none border ${
+                isLight
+                  ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                  : 'bg-[#18181b] border-[#27272a] text-slate-100 focus:border-sky-500'
+              }`}
             >
               <option value="Domain Investigation">Domain Investigation</option>
               <option value="Username / Persona Reconnaissance">Username / Persona Reconnaissance</option>
@@ -76,17 +98,23 @@ export const NewCaseModal: React.FC<NewCaseModalProps> = ({ isOpen, onClose, onS
             </select>
           </div>
 
-          <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
+          <div className={`flex justify-end gap-2 pt-3 border-t ${isLight ? 'border-slate-200' : 'border-[#27272a]'}`}>
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-slate-200 transition"
+              className={`px-4 py-2 text-xs font-semibold rounded-sm transition cursor-pointer border ${
+                isLight
+                  ? 'text-slate-600 hover:text-slate-900 border-slate-300 hover:bg-slate-100'
+                  : 'text-slate-400 hover:text-slate-200 border-slate-700 hover:bg-slate-800'
+              }`}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold rounded-lg transition shadow"
+              className={`px-4 py-2 text-xs font-bold text-white rounded-sm transition shadow-sm cursor-pointer ${
+                isLight ? 'bg-slate-900 hover:bg-slate-800' : 'bg-sky-600 hover:bg-sky-500'
+              }`}
             >
               Create Case
             </button>
@@ -105,6 +133,8 @@ interface NewEntityModalProps {
 }
 
 export const NewEntityModal: React.FC<NewEntityModalProps> = ({ isOpen, onClose, onSubmit }) => {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
   const [entityType, setEntityType] = useState<EntityType>('DOMAIN');
   const [value, setValue] = useState('');
 
@@ -119,24 +149,35 @@ export const NewEntityModal: React.FC<NewEntityModalProps> = ({ isOpen, onClose,
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-[#0d1322] border border-[#1f293d] rounded-xl w-full max-w-md shadow-2xl overflow-hidden">
-        <div className="p-4 border-b border-[#1f293d] flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sky-400 font-semibold text-sm">
-            <Plus className="w-4 h-4" /> Create Manual Entity Node
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-sans select-none animate-in fade-in duration-150">
+      <div className={`border rounded-sm w-full max-w-md shadow-2xl overflow-hidden ${
+        isLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-[#121214] border-[#27272a] text-zinc-100'
+      }`}>
+        <div className={`p-4 border-b flex items-center justify-between ${
+          isLight ? 'bg-[#f8fafc] border-slate-200' : 'bg-[#18181b] border-[#27272a]'
+        }`}>
+          <div className="flex items-center gap-2 font-bold text-xs font-mono tracking-wide">
+            <Plus className={`w-4 h-4 ${isLight ? 'text-sky-600' : 'text-sky-400'}`} />
+            <span className={isLight ? 'text-slate-900' : 'text-white'}>Create Manual Entity Node</span>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-200">
+          <button onClick={onClose} className={`transition cursor-pointer ${
+            isLight ? 'text-slate-400 hover:text-slate-700' : 'text-zinc-400 hover:text-white'
+          }`}>
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">Entity Type</label>
+            <label className={`block text-xs font-semibold mb-1 ${isLight ? 'text-slate-700' : 'text-slate-300'}`}>Entity Type</label>
             <select
               value={entityType}
               onChange={(e) => setEntityType(e.target.value as EntityType)}
-              className="w-full bg-slate-900 border border-slate-700 text-slate-100 text-xs rounded-lg p-2.5 focus:border-sky-500 focus:outline-none"
+              className={`w-full text-xs rounded-sm p-2.5 focus:outline-none border ${
+                isLight
+                  ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                  : 'bg-[#18181b] border-[#27272a] text-slate-100 focus:border-sky-500'
+              }`}
             >
               <option value="DOMAIN">DOMAIN (e.g. api.example.com)</option>
               <option value="IP ADDRESS">IP ADDRESS (e.g. 192.168.1.1)</option>
@@ -154,28 +195,38 @@ export const NewEntityModal: React.FC<NewEntityModalProps> = ({ isOpen, onClose,
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">Entity Value</label>
+            <label className={`block text-xs font-semibold mb-1 ${isLight ? 'text-slate-700' : 'text-slate-300'}`}>Entity Value</label>
             <input
               type="text"
               placeholder="Enter domain, IP, person name..."
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 text-slate-100 text-xs rounded-lg p-2.5 focus:border-sky-500 focus:outline-none font-mono"
+              className={`w-full text-xs rounded-sm p-2.5 focus:outline-none font-mono border ${
+                isLight
+                  ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                  : 'bg-[#18181b] border-[#27272a] text-slate-100 focus:border-sky-500'
+              }`}
               required
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
+          <div className={`flex justify-end gap-2 pt-3 border-t ${isLight ? 'border-slate-200' : 'border-[#27272a]'}`}>
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-slate-200 transition"
+              className={`px-4 py-2 text-xs font-semibold rounded-sm transition cursor-pointer border ${
+                isLight
+                  ? 'text-slate-600 hover:text-slate-900 border-slate-300 hover:bg-slate-100'
+                  : 'text-slate-400 hover:text-slate-200 border-slate-700 hover:bg-slate-800'
+              }`}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold rounded-lg transition shadow"
+              className={`px-4 py-2 text-xs font-bold text-white rounded-sm transition shadow-sm cursor-pointer ${
+                isLight ? 'bg-slate-900 hover:bg-slate-800' : 'bg-sky-600 hover:bg-sky-500'
+              }`}
             >
               Add Node
             </button>

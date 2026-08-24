@@ -196,58 +196,80 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     }
   };
 
+  const isLight = theme === 'light';
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150 select-none font-sans">
-      <div className="w-full max-w-xl rounded-lg border border-[#27272a] bg-[#121214] text-zinc-100 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div className={`w-full max-w-xl rounded-sm border shadow-2xl overflow-hidden flex flex-col max-h-[90vh] ${
+        isLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-[#121214] border-[#27272a] text-zinc-100'
+      }`}>
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#27272a] bg-[#18181b]">
+        <div className={`flex items-center justify-between px-5 py-4 border-b ${
+          isLight ? 'bg-[#f8fafc] border-slate-200' : 'bg-[#18181b] border-[#27272a]'
+        }`}>
           <div className="flex items-center gap-2">
-            <KeyRound className="w-4 h-4 text-sky-400" />
-            <h3 className="font-bold text-white text-xs tracking-wide font-mono">
+            <KeyRound className={`w-4 h-4 ${isLight ? 'text-sky-600' : 'text-sky-400'}`} />
+            <h3 className={`font-bold text-xs tracking-wide font-mono ${isLight ? 'text-slate-900' : 'text-white'}`}>
               TRACE Settings & BYO-API Management
             </h3>
           </div>
-          <button onClick={onClose} className="text-zinc-400 hover:text-white transition cursor-pointer">
+          <button onClick={onClose} className={`transition cursor-pointer ${
+            isLight ? 'text-slate-400 hover:text-slate-700' : 'text-zinc-400 hover:text-white'
+          }`}>
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Top-Level Segmented Control Navigation Tabs */}
-        <div className="grid grid-cols-3 p-1.5 bg-[#09090b] border-b border-[#27272a] gap-1">
+        <div className={`grid grid-cols-3 p-1.5 border-b gap-1 ${
+          isLight ? 'bg-slate-100 border-slate-200' : 'bg-[#09090b] border-[#27272a]'
+        }`}>
           <button
             type="button"
             onClick={() => setActiveTab('account')}
-            className={`py-1.5 px-2 rounded-md text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
+            className={`py-1.5 px-2 rounded-sm text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer border ${
               activeTab === 'account'
-                ? 'bg-[#27272a] text-white border border-[#3f3f46]'
-                : 'text-zinc-400 hover:text-white border border-transparent'
+                ? isLight
+                  ? 'bg-white text-slate-900 border-slate-300 shadow-sm'
+                  : 'bg-[#27272a] text-white border-[#3f3f46]'
+                : isLight
+                  ? 'text-slate-600 hover:text-slate-900 border-transparent'
+                  : 'text-zinc-400 hover:text-white border-transparent'
             }`}
           >
-            <UserIcon className="w-3.5 h-3.5 text-sky-400" /> Account & Security
+            <UserIcon className={`w-3.5 h-3.5 ${isLight ? 'text-sky-600' : 'text-sky-400'}`} /> Account & Security
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('ai')}
-            className={`py-1.5 px-2 rounded-md text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
+            className={`py-1.5 px-2 rounded-sm text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer border ${
               activeTab === 'ai'
-                ? 'bg-[#27272a] text-white border border-[#3f3f46]'
-                : 'text-zinc-400 hover:text-white border border-transparent'
+                ? isLight
+                  ? 'bg-white text-slate-900 border-slate-300 shadow-sm'
+                  : 'bg-[#27272a] text-white border-[#3f3f46]'
+                : isLight
+                  ? 'text-slate-600 hover:text-slate-900 border-transparent'
+                  : 'text-zinc-400 hover:text-white border-transparent'
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5 text-purple-400" /> AI Model Keys
+            <Sparkles className={`w-3.5 h-3.5 ${isLight ? 'text-purple-600' : 'text-purple-400'}`} /> AI Model Keys
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('social')}
-            className={`py-1.5 px-2 rounded-md text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
+            className={`py-1.5 px-2 rounded-sm text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer border ${
               activeTab === 'social'
-                ? 'bg-[#27272a] text-white border border-[#3f3f46]'
-                : 'text-zinc-400 hover:text-white border border-transparent'
+                ? isLight
+                  ? 'bg-white text-slate-900 border-slate-300 shadow-sm'
+                  : 'bg-[#27272a] text-white border-[#3f3f46]'
+                : isLight
+                  ? 'text-slate-600 hover:text-slate-900 border-transparent'
+                  : 'text-zinc-400 hover:text-white border-transparent'
             }`}
           >
-            <Globe className="w-3.5 h-3.5 text-emerald-400" /> Social & BYO-API
+            <Globe className={`w-3.5 h-3.5 ${isLight ? 'text-emerald-600' : 'text-emerald-400'}`} /> Social & BYO-API
           </button>
         </div>
 
@@ -258,29 +280,35 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <div className="space-y-4">
               {accountMessage && (
                 <div
-                  className={`p-3 rounded-md text-xs flex items-center gap-2 ${
+                  className={`p-3 rounded-sm text-xs flex items-center gap-2 border ${
                     accountMessage.type === 'success'
-                      ? 'bg-emerald-950/40 border border-emerald-500/40 text-emerald-300'
-                      : 'bg-rose-950/40 border border-rose-500/40 text-rose-300'
+                      ? isLight ? 'bg-emerald-50 border-emerald-300 text-emerald-800' : 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300'
+                      : isLight ? 'bg-rose-50 border-rose-300 text-rose-800' : 'bg-rose-950/40 border-rose-500/40 text-rose-300'
                   }`}
                 >
                   {accountMessage.type === 'success' ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   ) : (
-                    <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                    <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
                   )}
                   <span>{accountMessage.text}</span>
                 </div>
               )}
 
               {/* Appearance & Workspace Theme Mode */}
-              <div className="bg-[#18181b] border border-[#27272a] p-4 rounded-sm space-y-3">
-                <div className="flex items-center justify-between border-b border-[#27272a] pb-2">
-                  <div className="flex items-center gap-2 text-xs font-bold text-white font-mono">
-                    <Sun className="w-4 h-4 text-amber-400" />
+              <div className={`border p-4 rounded-sm space-y-3 ${
+                isLight ? 'bg-[#f8fafc] border-slate-200 text-slate-900' : 'bg-[#18181b] border-[#27272a]'
+              }`}>
+                <div className={`flex items-center justify-between border-b pb-2 ${
+                  isLight ? 'border-slate-200' : 'border-[#27272a]'
+                }`}>
+                  <div className={`flex items-center gap-2 text-xs font-bold font-mono ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                    <Sun className="w-4 h-4 text-amber-500" />
                     <span>APPEARANCE & THEME MODE</span>
                   </div>
-                  <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-sm bg-white text-black">
+                  <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-sm border ${
+                    isLight ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-black border-stone-200'
+                  }`}>
                     {theme === 'light' ? 'Light Mode' : 'Dark Mode'}
                   </span>
                 </div>
@@ -292,14 +320,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     className={`p-3 rounded-sm border flex items-center justify-between transition cursor-pointer ${
                       theme === 'dark'
                         ? 'bg-zinc-800 border-white text-white font-bold ring-1 ring-white/50 shadow-sm'
+                        : isLight
+                        ? 'bg-white border-slate-300 text-slate-600 hover:text-slate-900 hover:border-slate-400'
                         : 'bg-[#121214] border-[#27272a] text-zinc-400 hover:text-white hover:border-zinc-500'
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
-                      <Moon className="w-4 h-4 text-sky-400" />
+                      <Moon className={`w-4 h-4 ${theme === 'dark' ? 'text-sky-400' : 'text-slate-400'}`} />
                       <div className="text-left">
                         <p className="text-xs font-bold font-mono">Obsidian Dark</p>
-                        <p className="text-[10px] text-zinc-400">Deep obsidian command HUD</p>
+                        <p className={`text-[10px] ${theme === 'dark' ? 'text-zinc-300' : 'text-slate-500'}`}>Deep obsidian command HUD</p>
                       </div>
                     </div>
                     {theme === 'dark' && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
@@ -318,7 +348,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       <Sun className="w-4 h-4 text-amber-500" />
                       <div className="text-left">
                         <p className="text-xs font-bold font-mono">Clean Light</p>
-                        <p className="text-[10px] text-zinc-400">High-contrast white theme</p>
+                        <p className={`text-[10px] ${theme === 'light' ? 'text-slate-600' : 'text-zinc-400'}`}>High-contrast white theme</p>
                       </div>
                     </div>
                     {theme === 'light' && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
@@ -327,40 +357,56 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
 
               {/* User Profile Card */}
-              <form onSubmit={handleUpdateProfile} className="bg-[#18181b] border border-[#27272a] p-4 rounded-sm space-y-3">
-                <div className="flex items-center justify-between border-b border-[#27272a] pb-3">
+              <form onSubmit={handleUpdateProfile} className={`border p-4 rounded-sm space-y-3 ${
+                isLight ? 'bg-[#f8fafc] border-slate-200 text-slate-900' : 'bg-[#18181b] border-[#27272a]'
+              }`}>
+                <div className={`flex items-center justify-between border-b pb-3 ${
+                  isLight ? 'border-slate-200' : 'border-[#27272a]'
+                }`}>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-sky-500/20 border border-sky-400/40 flex items-center justify-center text-sky-400 font-bold font-mono text-sm">
+                    <div className={`w-10 h-10 rounded-full border flex items-center justify-center font-bold font-mono text-sm ${
+                      isLight ? 'bg-sky-100 border-sky-300 text-sky-700' : 'bg-sky-500/20 border-sky-400/40 text-sky-400'
+                    }`}>
                       {currentUser?.display_name ? currentUser.display_name.substring(0, 2).toUpperCase() : 'TR'}
                     </div>
                     <div>
-                      <h4 className="font-bold text-white text-xs">{currentUser?.display_name || 'Recon Analyst'}</h4>
-                      <p className="text-[10px] text-zinc-400 font-mono flex items-center gap-1">
-                        <Mail className="w-3 h-3 text-zinc-500" /> {currentUser?.email || 'analyst@tracex.osint'}
+                      <h4 className={`font-bold text-xs ${isLight ? 'text-slate-900' : 'text-white'}`}>{currentUser?.display_name || 'Recon Analyst'}</h4>
+                      <p className={`text-[10px] font-mono flex items-center gap-1 ${isLight ? 'text-slate-500' : 'text-zinc-400'}`}>
+                        <Mail className="w-3 h-3 text-zinc-400" /> {currentUser?.email || 'analyst@tracex.osint'}
                       </p>
                     </div>
                   </div>
-                  <span className="text-[9px] font-mono font-bold bg-sky-950/60 text-sky-300 border border-sky-800/60 px-2 py-0.5 rounded">
+                  <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-sm border ${
+                    isLight ? 'bg-sky-100 text-sky-800 border-sky-300' : 'bg-sky-950/60 text-sky-300 border-sky-800/60'
+                  }`}>
                     {currentUser?.role || 'Lead Investigator'}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 pt-1">
                   <div>
-                    <label className="block text-[11px] text-zinc-400 font-medium mb-1 font-mono">Display Name</label>
+                    <label className={`block text-[11px] font-medium mb-1 font-mono ${isLight ? 'text-slate-700' : 'text-zinc-400'}`}>Display Name</label>
                     <input
                       type="text"
                       value={displayName}
                       onChange={(e) => setDisplayName(e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-md bg-[#121214] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-sky-500 transition-colors"
+                      className={`w-full px-3 py-1.5 rounded-sm text-xs outline-none focus:outline-none border ${
+                        isLight
+                          ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                          : 'bg-[#121214] border-[#27272a] text-white focus:border-sky-500'
+                      }`}
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] text-zinc-400 font-medium mb-1 font-mono">Recon Role</label>
+                    <label className={`block text-[11px] font-medium mb-1 font-mono ${isLight ? 'text-slate-700' : 'text-zinc-400'}`}>Recon Role</label>
                     <select
                       value={userRole}
                       onChange={(e) => setUserRole(e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-md bg-[#121214] border border-[#27272a] text-xs text-zinc-200 outline-none focus:border-sky-500 cursor-pointer"
+                      className={`w-full px-3 py-1.5 rounded-sm text-xs outline-none focus:outline-none cursor-pointer border ${
+                        isLight
+                          ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                          : 'bg-[#121214] border-[#27272a] text-zinc-200 focus:border-sky-500'
+                      }`}
                     >
                       <option value="Lead Investigator">Lead Investigator</option>
                       <option value="Security Analyst">Security Analyst</option>
@@ -373,7 +419,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <button
                   type="submit"
                   disabled={savingProfile}
-                  className="mt-1 py-1.5 px-3 rounded-md bg-[#27272a] hover:bg-[#3f3f46] text-white font-semibold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  className={`mt-1 py-1.5 px-3 rounded-sm font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 border ${
+                    isLight
+                      ? 'bg-slate-900 hover:bg-slate-800 text-white border-slate-900'
+                      : 'bg-[#27272a] hover:bg-[#3f3f46] text-white border-[#3f3f46]'
+                  }`}
                 >
                   {savingProfile ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
                   <span>Save Profile</span>
@@ -381,27 +431,33 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </form>
 
               {/* Password Management */}
-              <form onSubmit={handleChangePassword} className="bg-[#18181b] border border-[#27272a] p-4 rounded-md space-y-3">
-                <div className="flex items-center gap-2 text-xs font-bold text-white font-mono">
-                  <Lock className="w-4 h-4 text-sky-400" />
+              <form onSubmit={handleChangePassword} className={`border p-4 rounded-sm space-y-3 ${
+                isLight ? 'bg-[#f8fafc] border-slate-200 text-slate-900' : 'bg-[#18181b] border-[#27272a]'
+              }`}>
+                <div className={`flex items-center gap-2 text-xs font-bold font-mono ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                  <Lock className={`w-4 h-4 ${isLight ? 'text-sky-600' : 'text-sky-400'}`} />
                   <span>CHANGE PASSWORD</span>
                 </div>
 
                 <div className="space-y-2">
                   <div>
-                    <label className="block text-[11px] text-zinc-400 font-medium mb-1">Current Password</label>
+                    <label className={`block text-[11px] font-medium mb-1 ${isLight ? 'text-slate-700' : 'text-zinc-400'}`}>Current Password</label>
                     <input
                       type="password"
                       required
                       placeholder="••••••••••••"
                       value={currentPass}
                       onChange={(e) => setCurrentPass(e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-md bg-[#121214] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-sky-500 transition-colors"
+                      className={`w-full px-3 py-1.5 rounded-sm text-xs outline-none focus:outline-none border ${
+                        isLight
+                          ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                          : 'bg-[#121214] border-[#27272a] text-white focus:border-sky-500'
+                      }`}
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="block text-[11px] text-zinc-400 font-medium mb-1">New Password</label>
+                      <label className={`block text-[11px] font-medium mb-1 ${isLight ? 'text-slate-700' : 'text-zinc-400'}`}>New Password</label>
                       <input
                         type="password"
                         required
@@ -409,11 +465,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         placeholder="••••••••••••"
                         value={newPass}
                         onChange={(e) => setNewPass(e.target.value)}
-                        className="w-full px-3 py-1.5 rounded-md bg-[#121214] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-sky-500 transition-colors"
+                        className={`w-full px-3 py-1.5 rounded-sm text-xs outline-none focus:outline-none border ${
+                          isLight
+                            ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                            : 'bg-[#121214] border-[#27272a] text-white focus:border-sky-500'
+                        }`}
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-zinc-400 font-medium mb-1">Confirm New Password</label>
+                      <label className={`block text-[11px] font-medium mb-1 ${isLight ? 'text-slate-700' : 'text-zinc-400'}`}>Confirm New Password</label>
                       <input
                         type="password"
                         required
@@ -421,7 +481,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         placeholder="••••••••••••"
                         value={confirmPass}
                         onChange={(e) => setConfirmPass(e.target.value)}
-                        className="w-full px-3 py-1.5 rounded-md bg-[#121214] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-sky-500 transition-colors"
+                        className={`w-full px-3 py-1.5 rounded-sm text-xs outline-none focus:outline-none border ${
+                          isLight
+                            ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                            : 'bg-[#121214] border-[#27272a] text-white focus:border-sky-500'
+                        }`}
                       />
                     </div>
                   </div>
@@ -430,7 +494,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <button
                   type="submit"
                   disabled={savingPassword}
-                  className="mt-1 py-1.5 px-3 rounded-md bg-[#27272a] hover:bg-[#3f3f46] text-white font-semibold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  className={`mt-1 py-1.5 px-3 rounded-sm font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 border ${
+                    isLight
+                      ? 'bg-slate-900 hover:bg-slate-800 text-white border-slate-900'
+                      : 'bg-[#27272a] hover:bg-[#3f3f46] text-white border-[#3f3f46]'
+                  }`}
                 >
                   {savingPassword ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ShieldCheck className="w-3.5 h-3.5" />}
                   <span>Update Password</span>
@@ -438,10 +506,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </form>
 
               {/* Active Session & Sign Out Button */}
-              <div className="bg-[#18181b] border border-[#27272a] p-3.5 rounded-md flex items-center justify-between">
+              <div className={`border p-3.5 rounded-sm flex items-center justify-between ${
+                isLight ? 'bg-[#f8fafc] border-slate-200' : 'bg-[#18181b] border-[#27272a]'
+              }`}>
                 <div>
-                  <span className="text-xs font-bold text-white block">Active Analyst Session</span>
-                  <span className="text-[10px] text-zinc-400 font-mono block">Logged in as {currentUser?.email || 'analyst'}</span>
+                  <span className={`text-xs font-bold block ${isLight ? 'text-slate-900' : 'text-white'}`}>Active Analyst Session</span>
+                  <span className={`text-[10px] font-mono block ${isLight ? 'text-slate-500' : 'text-zinc-400'}`}>Logged in as {currentUser?.email || 'analyst'}</span>
                 </div>
                 <button
                   type="button"
@@ -449,7 +519,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     onClose();
                     onLogout();
                   }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/40 text-xs font-semibold rounded-md transition cursor-pointer"
+                  className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs font-semibold rounded-sm transition cursor-pointer ${
+                    isLight
+                      ? 'bg-rose-50 hover:bg-rose-100 text-rose-700 border-rose-300'
+                      : 'bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border-rose-800/40'
+                  }`}
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   <span>Sign Out</span>
@@ -462,14 +536,18 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           {(activeTab === 'ai' || activeTab === 'social') && (
             <form onSubmit={handleSaveBYO} className="space-y-4">
               {byoError && (
-                <div className="p-3 bg-rose-950/40 border border-rose-500/40 rounded-md text-xs text-rose-300">
+                <div className={`p-3 border rounded-sm text-xs ${
+                  isLight ? 'bg-rose-50 border-rose-300 text-rose-800' : 'bg-rose-950/40 border-rose-500/40 text-rose-300'
+                }`}>
                   {byoError}
                 </div>
               )}
 
               {byoSuccess && (
-                <div className="p-3 bg-emerald-950/40 border border-emerald-500/40 rounded-md text-xs text-emerald-300 flex items-center gap-2">
-                  <Check className="w-4 h-4 text-emerald-400" />
+                <div className={`p-3 border rounded-sm text-xs flex items-center gap-2 ${
+                  isLight ? 'bg-emerald-50 border-emerald-300 text-emerald-800' : 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300'
+                }`}>
+                  <Check className="w-4 h-4 text-emerald-600" />
                   <span>Configuration saved successfully!</span>
                 </div>
               )}
@@ -477,38 +555,48 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               {activeTab === 'ai' && (
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-wider text-zinc-400 mb-2 font-mono">
+                    <label className={`block text-[10px] font-bold uppercase tracking-wider mb-2 font-mono ${
+                      isLight ? 'text-slate-600' : 'text-zinc-400'
+                    }`}>
                       AI PROVIDER MODEL
                     </label>
                     <div className="grid grid-cols-2 gap-3">
                       <div
                         onClick={() => setProvider('gemini')}
-                        className={`p-3 rounded-md border cursor-pointer transition ${
+                        className={`p-3 rounded-sm border cursor-pointer transition ${
                           provider === 'gemini'
-                            ? 'bg-[#27272a] border-sky-500/80 text-white'
-                            : 'bg-[#18181b] border-[#27272a] text-zinc-400 hover:border-zinc-700'
+                            ? isLight
+                              ? 'bg-sky-50 border-sky-500 text-slate-900'
+                              : 'bg-[#27272a] border-sky-500/80 text-white'
+                            : isLight
+                              ? 'bg-white border-slate-300 text-slate-600 hover:border-slate-400'
+                              : 'bg-[#18181b] border-[#27272a] text-zinc-400 hover:border-zinc-700'
                         }`}
                       >
                         <div className="flex items-center gap-2 font-bold text-xs">
-                          <Sparkles className="w-3.5 h-3.5 text-sky-400" /> Google Gemini Free Tier
+                          <Sparkles className="w-3.5 h-3.5 text-sky-600" /> Google Gemini Free Tier
                         </div>
-                        <p className="text-[10px] text-zinc-400 mt-1 leading-normal">
+                        <p className={`text-[10px] mt-1 leading-normal ${isLight ? 'text-slate-600' : 'text-zinc-400'}`}>
                           Recommended for OSINT analysis & graph summaries.
                         </p>
                       </div>
 
                       <div
                         onClick={() => setProvider('ollama')}
-                        className={`p-3 rounded-md border cursor-pointer transition ${
+                        className={`p-3 rounded-sm border cursor-pointer transition ${
                           provider === 'ollama'
-                            ? 'bg-[#27272a] border-sky-500/80 text-white'
-                            : 'bg-[#18181b] border-[#27272a] text-zinc-400 hover:border-zinc-700'
+                            ? isLight
+                              ? 'bg-emerald-50 border-emerald-500 text-slate-900'
+                              : 'bg-[#27272a] border-sky-500/80 text-white'
+                            : isLight
+                              ? 'bg-white border-slate-300 text-slate-600 hover:border-slate-400'
+                              : 'bg-[#18181b] border-[#27272a] text-zinc-400 hover:border-zinc-700'
                         }`}
                       >
                         <div className="flex items-center gap-2 font-bold text-xs">
-                          <Cpu className="w-3.5 h-3.5 text-emerald-400" /> Local Ollama Model
+                          <Cpu className="w-3.5 h-3.5 text-emerald-600" /> Local Ollama Model
                         </div>
-                        <p className="text-[10px] text-zinc-400 mt-1 leading-normal">
+                        <p className={`text-[10px] mt-1 leading-normal ${isLight ? 'text-slate-600' : 'text-zinc-400'}`}>
                           100% offline local air-gapped LLM.
                         </p>
                       </div>
@@ -516,11 +604,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   </div>
 
                   {provider === 'gemini' ? (
-                    <div className="space-y-2 bg-[#18181b] border border-[#27272a] p-4 rounded-md">
+                    <div className={`space-y-2 border p-4 rounded-sm ${
+                      isLight ? 'bg-[#f8fafc] border-slate-200' : 'bg-[#18181b] border-[#27272a]'
+                    }`}>
                       <div className="flex items-center justify-between">
-                        <label className="text-xs font-semibold text-zinc-200">Google Gemini API Key</label>
+                        <label className={`text-xs font-semibold ${isLight ? 'text-slate-800' : 'text-zinc-200'}`}>Google Gemini API Key</label>
                         {hasGeminiKey && (
-                          <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-1">
+                          <span className="text-[10px] font-mono text-emerald-600 flex items-center gap-1 font-bold">
                             <ShieldCheck className="w-3 h-3" /> Configured ({maskedGeminiKey})
                           </span>
                         )}
@@ -530,38 +620,52 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         placeholder={hasGeminiKey ? "Enter new API key to overwrite..." : "AIzaSy..."}
                         value={geminiApiKey}
                         onChange={(e) => setGeminiApiKey(e.target.value)}
-                        className="w-full px-3 py-1.5 rounded-md bg-[#18181b] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-sky-500 transition-colors"
+                        className={`w-full px-3 py-1.5 rounded-sm text-xs outline-none focus:outline-none border ${
+                          isLight
+                            ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                            : 'bg-[#18181b] border-[#27272a] text-white focus:border-sky-500'
+                        }`}
                       />
-                      <p className="text-[10px] text-zinc-400 flex items-center justify-between pt-1">
+                      <p className={`text-[10px] flex items-center justify-between pt-1 ${isLight ? 'text-slate-500' : 'text-zinc-400'}`}>
                         <span>Free key available at Google AI Studio.</span>
                         <a
                           href="https://aistudio.google.com/app/apikey"
                           target="_blank"
                           rel="noreferrer"
-                          className="text-sky-400 hover:underline flex items-center gap-1"
+                          className="text-sky-600 hover:underline flex items-center gap-1 font-medium"
                         >
                           Get Gemini API Key <ExternalLink className="w-3 h-3" />
                         </a>
                       </p>
                     </div>
                   ) : (
-                    <div className="space-y-3 bg-[#18181b] border border-[#27272a] p-4 rounded-md">
+                    <div className={`space-y-3 border p-4 rounded-sm ${
+                      isLight ? 'bg-[#f8fafc] border-slate-200' : 'bg-[#18181b] border-[#27272a]'
+                    }`}>
                       <div>
-                        <label className="block text-xs font-semibold text-zinc-200 mb-1">Ollama Host URL</label>
+                        <label className={`block text-xs font-semibold mb-1 ${isLight ? 'text-slate-800' : 'text-zinc-200'}`}>Ollama Host URL</label>
                         <input
                           type="text"
                           value={ollamaUrl}
                           onChange={(e) => setOllamaUrl(e.target.value)}
-                          className="w-full px-3 py-1.5 rounded-md bg-[#18181b] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-sky-500 transition-colors"
+                          className={`w-full px-3 py-1.5 rounded-sm text-xs outline-none focus:outline-none border ${
+                            isLight
+                              ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                              : 'bg-[#18181b] border-[#27272a] text-white focus:border-sky-500'
+                          }`}
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold text-zinc-200 mb-1">Ollama Model Name</label>
+                        <label className={`block text-xs font-semibold mb-1 ${isLight ? 'text-slate-800' : 'text-zinc-200'}`}>Ollama Model Name</label>
                         <input
                           type="text"
                           value={ollamaModel}
                           onChange={(e) => setOllamaModel(e.target.value)}
-                          className="w-full px-3 py-1.5 rounded-md bg-[#18181b] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-sky-500 transition-colors"
+                          className={`w-full px-3 py-1.5 rounded-sm text-xs outline-none focus:outline-none border ${
+                            isLight
+                              ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                              : 'bg-[#18181b] border-[#27272a] text-white focus:border-sky-500'
+                          }`}
                         />
                       </div>
                     </div>
@@ -571,11 +675,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
               {activeTab === 'social' && (
                 <div className="space-y-3">
-                  <div className="bg-[#18181b] border border-[#27272a] p-3.5 rounded-md space-y-2">
+                  <div className={`border p-3.5 rounded-sm space-y-2 ${
+                    isLight ? 'bg-[#f8fafc] border-slate-200' : 'bg-[#18181b] border-[#27272a]'
+                  }`}>
                     <div className="flex items-center justify-between">
-                      <label className="text-xs font-semibold text-zinc-200">Apify API Token (Scraper API)</label>
+                      <label className={`text-xs font-semibold ${isLight ? 'text-slate-800' : 'text-zinc-200'}`}>Apify API Token (Scraper API)</label>
                       {hasApifyToken && (
-                        <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-1">
+                        <span className="text-[10px] font-mono text-emerald-600 flex items-center gap-1 font-bold">
                           <ShieldCheck className="w-3 h-3" /> Configured ({maskedApifyToken})
                         </span>
                       )}
@@ -585,15 +691,21 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       placeholder={hasApifyToken ? "Enter new token to overwrite..." : "apify_api_..."}
                       value={apifyToken}
                       onChange={(e) => setApifyToken(e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-md bg-[#18181b] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-sky-500 transition-colors"
+                      className={`w-full px-3 py-1.5 rounded-sm text-xs outline-none focus:outline-none border ${
+                        isLight
+                          ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                          : 'bg-[#18181b] border-[#27272a] text-white focus:border-sky-500'
+                      }`}
                     />
                   </div>
 
-                  <div className="bg-[#18181b] border border-[#27272a] p-3.5 rounded-md space-y-2">
+                  <div className={`border p-3.5 rounded-sm space-y-2 ${
+                    isLight ? 'bg-[#f8fafc] border-slate-200' : 'bg-[#18181b] border-[#27272a]'
+                  }`}>
                     <div className="flex items-center justify-between">
-                      <label className="text-xs font-semibold text-zinc-200">HIBP Threat Intel API Key</label>
+                      <label className={`text-xs font-semibold ${isLight ? 'text-slate-800' : 'text-zinc-200'}`}>HIBP Threat Intel API Key</label>
                       {hasHibpKey && (
-                        <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-1">
+                        <span className="text-[10px] font-mono text-emerald-600 flex items-center gap-1 font-bold">
                           <ShieldCheck className="w-3 h-3" /> Configured ({maskedHibpKey})
                         </span>
                       )}
@@ -603,7 +715,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       placeholder={hasHibpKey ? "Enter new key to overwrite..." : "hibp_key_..."}
                       value={hibpKey}
                       onChange={(e) => setHibpKey(e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-md bg-[#18181b] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-sky-500 transition-colors"
+                      className={`w-full px-3 py-1.5 rounded-sm text-xs outline-none focus:outline-none border ${
+                        isLight
+                          ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                          : 'bg-[#18181b] border-[#27272a] text-white focus:border-sky-500'
+                      }`}
                     />
                   </div>
                 </div>
@@ -613,7 +729,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <button
                   type="submit"
                   disabled={savingBYO}
-                  className="py-2 px-4 rounded-md bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs transition-all shadow-none flex items-center justify-center gap-1.5 cursor-pointer w-full disabled:opacity-50"
+                  className={`py-2 px-4 rounded-sm font-bold text-xs transition shadow-sm flex items-center justify-center gap-1.5 cursor-pointer w-full disabled:opacity-50 ${
+                    isLight ? 'bg-slate-900 hover:bg-slate-800 text-white' : 'bg-sky-600 hover:bg-sky-500 text-white'
+                  }`}
                 >
                   {savingBYO ? (
                     <>

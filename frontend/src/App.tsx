@@ -16,8 +16,12 @@ import type { AgentStageState } from './components/GraphCanvas';
 import type { Investigation, Entity, Relationship, Note, EntityType, ConfidenceLevel, User } from './types';
 import * as api from './lib/api';
 import { Loader2, ShieldAlert } from 'lucide-react';
+import { useTheme } from './context/ThemeContext';
 
 export function App() {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
+
   // Authentication State
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isAuthChecking, setIsAuthChecking] = useState(true);
@@ -454,7 +458,9 @@ export function App() {
   const selectedEntity = entities.find((e) => e.id === selectedNodeId) || null;
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#07080f] select-none font-sans text-zinc-100">
+    <div className={`flex h-screen w-screen overflow-hidden select-none font-sans transition-colors duration-200 ${
+      isLight ? 'bg-slate-100 text-slate-900' : 'bg-[#07080f] text-zinc-100'
+    }`}>
       {/* Left Sidebar */}
       <Sidebar
         currentView={currentNav}

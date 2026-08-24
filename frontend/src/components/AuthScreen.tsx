@@ -14,12 +14,15 @@ import {
 } from 'lucide-react';
 import * as api from '../lib/api';
 import type { User } from '../types';
+import { useTheme } from '../context/ThemeContext';
 
 interface AuthScreenProps {
   onAuthenticated: (user: User) => void;
 }
 
 export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
   const [mode, setMode] = useState<'login' | 'register'>('login');
   
   // Form fields
@@ -90,43 +93,65 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-[#07080f] flex items-center justify-center p-4 select-none font-sans relative overflow-hidden">
+    <div className={`min-h-screen w-screen flex items-center justify-center p-4 select-none font-sans relative overflow-hidden transition-colors duration-200 ${
+      isLight ? 'bg-slate-100' : 'bg-[#07080f]'
+    }`}>
       {/* Subtle Background Glow Accent */}
-      <div className="absolute w-[500px] h-[500px] bg-sky-500/5 rounded-full blur-3xl pointer-events-none -top-20 -left-20" />
-      <div className="absolute w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-3xl pointer-events-none -bottom-20 -right-20" />
+      <div className={`absolute w-[500px] h-[500px] rounded-full blur-3xl pointer-events-none -top-20 -left-20 ${
+        isLight ? 'bg-sky-200/40' : 'bg-sky-500/5'
+      }`} />
+      <div className={`absolute w-[400px] h-[400px] rounded-full blur-3xl pointer-events-none -bottom-20 -right-20 ${
+        isLight ? 'bg-purple-200/40' : 'bg-purple-500/5'
+      }`} />
 
       {/* Main Authentication Box */}
-      <div className="w-full max-w-md bg-[#121214] border border-[#27272a] rounded-sm shadow-2xl overflow-hidden relative z-10 animate-in fade-in zoom-in-95 duration-200">
+      <div className={`w-full max-w-md border rounded-sm shadow-2xl overflow-hidden relative z-10 animate-in fade-in zoom-in-95 duration-200 ${
+        isLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-[#121214] border-[#27272a] text-white'
+      }`}>
         {/* Brand Banner */}
-        <div className="p-6 border-b border-[#27272a] bg-[#18181b] text-center space-y-2">
-          <div className="w-12 h-12 rounded-sm bg-white border border-stone-200 flex items-center justify-center text-black mx-auto shadow-sm">
-            <ShieldAlert className="w-6 h-6 text-black" />
+        <div className={`p-6 border-b text-center space-y-2 ${
+          isLight ? 'bg-[#f8fafc] border-slate-200' : 'bg-[#18181b] border-[#27272a]'
+        }`}>
+          <div className={`w-12 h-12 rounded-sm border flex items-center justify-center mx-auto shadow-sm ${
+            isLight ? 'bg-slate-900 border-slate-900 text-white' : 'bg-white border-stone-200 text-black'
+          }`}>
+            <ShieldAlert className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-base font-bold text-white tracking-wide font-mono flex items-center justify-center gap-2">
+            <h1 className={`text-base font-bold tracking-wide font-mono flex items-center justify-center gap-2 ${
+              isLight ? 'text-slate-900' : 'text-white'
+            }`}>
               TRACE OSINT PLATFORM
-              <span className="text-[10px] font-mono bg-white text-black font-bold border border-stone-200 px-1.5 py-0.5 rounded-sm">
+              <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-sm border ${
+                isLight ? 'bg-slate-100 text-slate-800 border-slate-300' : 'bg-white text-black border-stone-200'
+              }`}>
                 v3.5
               </span>
             </h1>
-            <p className="text-xs text-zinc-400 font-mono mt-0.5">
+            <p className={`text-xs font-mono mt-0.5 ${isLight ? 'text-slate-500' : 'text-zinc-400'}`}>
               Enterprise Threat Reconnaissance & Intelligence
             </p>
           </div>
         </div>
 
         {/* Tab Switcher (Sign In vs Create Account) */}
-        <div className="grid grid-cols-2 p-1.5 bg-[#09090b] border-b border-[#27272a] gap-1">
+        <div className={`grid grid-cols-2 p-1.5 border-b gap-1 ${
+          isLight ? 'bg-slate-100 border-slate-200' : 'bg-[#09090b] border-[#27272a]'
+        }`}>
           <button
             type="button"
             onClick={() => {
               setMode('login');
               setError(null);
             }}
-            className={`py-2 px-3 rounded-sm text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer ${
+            className={`py-2 px-3 rounded-sm text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer border ${
               mode === 'login'
-                ? 'bg-white text-black border border-stone-200 shadow-sm'
-                : 'text-zinc-400 hover:text-white border border-transparent'
+                ? isLight
+                  ? 'bg-white text-slate-900 border-slate-300 shadow-sm'
+                  : 'bg-white text-black border-stone-200 shadow-sm'
+                : isLight
+                  ? 'text-slate-600 hover:text-slate-900 border-transparent'
+                  : 'text-zinc-400 hover:text-white border-transparent'
             }`}
           >
             <KeyRound className="w-3.5 h-3.5" /> Sign In
@@ -137,10 +162,14 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
               setMode('register');
               setError(null);
             }}
-            className={`py-2 px-3 rounded-sm text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer ${
+            className={`py-2 px-3 rounded-sm text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer border ${
               mode === 'register'
-                ? 'bg-white text-black border border-stone-200 shadow-sm'
-                : 'text-zinc-400 hover:text-white border border-transparent'
+                ? isLight
+                  ? 'bg-white text-slate-900 border-slate-300 shadow-sm'
+                  : 'bg-white text-black border-stone-200 shadow-sm'
+                : isLight
+                  ? 'text-slate-600 hover:text-slate-900 border-transparent'
+                  : 'text-zinc-400 hover:text-white border-transparent'
             }`}
           >
             <UserIcon className="w-3.5 h-3.5" /> Create Account
@@ -150,8 +179,10 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 bg-rose-950/40 border border-rose-500/40 rounded-sm text-xs text-rose-300 flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+            <div className={`p-3 border rounded-sm text-xs flex items-start gap-2 ${
+              isLight ? 'bg-rose-50 border-rose-300 text-rose-800' : 'bg-rose-950/40 border-rose-500/40 text-rose-300'
+            }`}>
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
           )}
@@ -159,30 +190,38 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
           {mode === 'register' && (
             <>
               <div>
-                <label className="block text-[11px] text-zinc-400 font-medium mb-1 font-mono">
+                <label className={`block text-[11px] font-medium mb-1 font-mono ${isLight ? 'text-slate-700' : 'text-zinc-400'}`}>
                   DISPLAY / ANALYST NAME
                 </label>
                 <div className="relative">
-                  <UserIcon className="w-4 h-4 text-zinc-500 absolute left-3 top-2.5" />
+                  <UserIcon className={`w-4 h-4 absolute left-3 top-2.5 ${isLight ? 'text-slate-400' : 'text-zinc-500'}`} />
                   <input
                     type="text"
                     required
                     placeholder="e.g. Alex Mercer"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 rounded-sm bg-[#18181b] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
+                    className={`w-full pl-9 pr-3 py-2 rounded-sm text-xs outline-none focus:outline-none border ${
+                      isLight
+                        ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                        : 'bg-[#18181b] border-[#27272a] text-white focus:border-white'
+                    }`}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] text-zinc-400 font-medium mb-1 font-mono">
+                <label className={`block text-[11px] font-medium mb-1 font-mono ${isLight ? 'text-slate-700' : 'text-zinc-400'}`}>
                   RECON ROLE / DESIGNATION
                 </label>
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="w-full px-3 py-2 rounded-sm bg-[#18181b] border border-[#27272a] text-xs text-zinc-200 outline-none focus:border-white cursor-pointer"
+                  className={`w-full px-3 py-2 rounded-sm text-xs outline-none focus:outline-none cursor-pointer border ${
+                    isLight
+                      ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                      : 'bg-[#18181b] border-[#27272a] text-zinc-200 focus:border-white'
+                  }`}
                 >
                   <option value="Lead Investigator">Lead Investigator</option>
                   <option value="Security Analyst">Security Analyst</option>
@@ -195,28 +234,32 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
           )}
 
           <div>
-            <label className="block text-[11px] text-zinc-400 font-medium mb-1 font-mono">
+            <label className={`block text-[11px] font-medium mb-1 font-mono ${isLight ? 'text-slate-700' : 'text-zinc-400'}`}>
               EMAIL ADDRESS
             </label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-zinc-500 absolute left-3 top-2.5" />
+              <Mail className={`w-4 h-4 absolute left-3 top-2.5 ${isLight ? 'text-slate-400' : 'text-zinc-500'}`} />
               <input
                 type="email"
                 required
                 placeholder="analyst@tracex.osint"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 rounded-sm bg-[#18181b] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
+                className={`w-full pl-9 pr-3 py-2 rounded-sm text-xs outline-none focus:outline-none border ${
+                  isLight
+                    ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                    : 'bg-[#18181b] border-[#27272a] text-white focus:border-white'
+                }`}
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-[11px] text-zinc-400 font-medium mb-1 font-mono">
+            <label className={`block text-[11px] font-medium mb-1 font-mono ${isLight ? 'text-slate-700' : 'text-zinc-400'}`}>
               ACCOUNT PASSWORD
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-zinc-500 absolute left-3 top-2.5" />
+              <Lock className={`w-4 h-4 absolute left-3 top-2.5 ${isLight ? 'text-slate-400' : 'text-zinc-500'}`} />
               <input
                 type="password"
                 required
@@ -224,7 +267,11 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                 placeholder="••••••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 rounded-sm bg-[#18181b] border border-[#27272a] text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
+                className={`w-full pl-9 pr-3 py-2 rounded-sm text-xs outline-none focus:outline-none border ${
+                  isLight
+                    ? 'bg-white border-slate-300 text-slate-900 focus:border-slate-900'
+                    : 'bg-[#18181b] border-[#27272a] text-white focus:border-white'
+                }`}
               />
             </div>
           </div>
@@ -234,17 +281,21 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 px-4 rounded-sm bg-white hover:bg-stone-100 text-black font-bold text-xs transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 border border-stone-200"
+              className={`w-full py-2.5 px-4 rounded-sm font-bold text-xs transition shadow-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 border ${
+                isLight
+                  ? 'bg-slate-900 hover:bg-slate-800 text-white border-slate-900'
+                  : 'bg-white hover:bg-stone-100 text-black border-stone-200'
+              }`}
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin text-black" />
+                  <Loader2 className={`w-4 h-4 animate-spin ${isLight ? 'text-white' : 'text-black'}`} />
                   <span>Authenticating Analyst...</span>
                 </>
               ) : (
                 <>
                   <span>{mode === 'login' ? 'Access Workspace' : 'Create & Access Account'}</span>
-                  <ArrowRight className="w-4 h-4 text-black" />
+                  <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </button>
@@ -252,17 +303,23 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
         </form>
 
         {/* Demo Fast-Login Shortcut */}
-        <div className="px-6 py-4 border-t border-[#27272a] bg-[#18181b] flex items-center justify-between">
-          <div className="text-[10px] text-zinc-400 font-mono">
+        <div className={`px-6 py-4 border-t flex items-center justify-between ${
+          isLight ? 'bg-[#f8fafc] border-slate-200' : 'bg-[#18181b] border-[#27272a]'
+        }`}>
+          <div className={`text-[10px] font-mono ${isLight ? 'text-slate-500' : 'text-zinc-400'}`}>
             <span>Quick Evaluation?</span>
           </div>
           <button
             type="button"
             onClick={handleUseDemo}
             disabled={loading}
-            className="flex items-center gap-1.5 text-xs text-black bg-white hover:bg-stone-100 px-3 py-1.5 rounded-sm font-bold border border-stone-200 transition cursor-pointer disabled:opacity-50 shadow-sm"
+            className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-sm font-bold transition cursor-pointer disabled:opacity-50 shadow-sm border ${
+              isLight
+                ? 'bg-white hover:bg-slate-100 text-slate-900 border-slate-300'
+                : 'text-black bg-white hover:bg-stone-100 border-stone-200'
+            }`}
           >
-            <Sparkles className="w-3.5 h-3.5 text-black fill-current" />
+            <Sparkles className="w-3.5 h-3.5 fill-current" />
             <span>1-Click Demo Account</span>
           </button>
         </div>
