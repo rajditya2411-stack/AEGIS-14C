@@ -330,9 +330,6 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
               <span>Inspector</span>
             </button>
           )}
-              <span>Inspector</span>
-            </button>
-          )}
         </div>
       </div>
 
