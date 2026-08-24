@@ -405,7 +405,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                           </div>
                           <CopyButton text={ent.value} className="bg-[#121214] hover:bg-zinc-800 border border-zinc-800" />
                         </div>
-                      ))}
+                      ))
                     )}
                   </div>
                 </div>
