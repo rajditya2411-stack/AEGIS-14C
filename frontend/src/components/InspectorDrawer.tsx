@@ -282,7 +282,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
               : isLight ? 'border-transparent text-slate-600 hover:text-slate-900' : 'border-transparent text-zinc-400 hover:text-zinc-200'
           }`}
         >
-          <Scale className={`w-3 h-3 ${isLight ? 'text-indigo-600' : 'text-indigo-400'}`} /> Sec 106 ({legalDirectives.length})
+          <Scale className={`w-3 h-3 ${isLight ? 'text-indigo-600' : 'text-indigo-400'}`} /> Sec 94 BNSS ({legalDirectives.length})
         </button>
         <button
           onClick={() => setActiveTab('ledger')}
@@ -548,7 +548,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
           </div>
         )}
 
-        {/* TAB 3: SECTION 106 BNSS LEGAL FREEZE NOTICES */}
+        {/* TAB 3: SECTION 94 BNSS LEGAL FREEZE NOTICES */}
         {activeTab === 'legal' && (
           <div className="space-y-4">
             <div className={`flex items-center justify-between border-b pb-2 ${isLight ? 'border-slate-200' : 'border-[#27272a]'}`}>
@@ -557,7 +557,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                   <Scale className={`w-4 h-4 ${isLight ? 'text-indigo-600' : 'text-indigo-400'}`} />
                   Statutory Freeze Orders
                 </h3>
-                <p className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-zinc-400'}`}>Section 106 BNSS / Section 66D IT Act Directives</p>
+                <p className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-zinc-400'}`}>Section 94 BNSS / Section 66D IT Act Directives (formerly Sec 91 CrPC)</p>
               </div>
               <button
                 onClick={() => handleExportLegalNotice()}
@@ -574,7 +574,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
             {legalDirectives.length === 0 ? (
               <div className={`text-center py-8 text-xs ${isLight ? 'text-slate-400' : 'text-zinc-500'}`}>
                 <FileCheck className="w-6 h-6 mx-auto mb-2 opacity-50" />
-                <p>No Section 106 BNSS directives drafted yet.<br/>Run autonomous triage to draft freeze notices.</p>
+                <p>No Section 94 BNSS directives drafted yet.<br/>Run autonomous triage to draft freeze notices.</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -784,8 +784,8 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
               isLight ? 'bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border-indigo-300' : 'bg-indigo-950/80 hover:bg-indigo-900/80 text-indigo-300 border-indigo-500/40'
             }`}
           >
-            {isExportingNotice ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Scale className="w-3.5 h-3.5 text-indigo-500" />}
-            <span>Sec 106 Notice (PDF)</span>
+            {isExportingNotice ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Scale className="w-3 h-3 text-indigo-400" />}
+            <span>Sec 94 BNSS Notice (PDF)</span>
           </button>
         </div>
       )}

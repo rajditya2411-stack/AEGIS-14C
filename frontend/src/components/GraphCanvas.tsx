@@ -334,7 +334,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
             )}
           </button>
 
-          {/* 1-Click Section 106 BNSS Freeze Notice Download */}
+          {/* 1-Click Section 94 BNSS Freeze Notice Download */}
           {activeCase && (
             <button
               onClick={() => downloadLegalFreezeNoticePDF(activeCase.id)}
@@ -343,10 +343,10 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
                   ? 'bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border-indigo-300'
                   : 'bg-indigo-950/80 hover:bg-indigo-900/90 text-indigo-200 border-indigo-500/40'
               }`}
-              title="Download Statutory Section 106 BNSS Bank Freeze Notice (PDF)"
+              title="Download Statutory Section 94 BNSS Bank Freeze Notice (PDF)"
             >
               <Scale className={`w-3.5 h-3.5 ${isLight ? 'text-indigo-700' : 'text-indigo-300'}`} />
-              <span>Sec 106 Notice</span>
+              <span>Sec 94 Notice</span>
             </button>
           )}
 

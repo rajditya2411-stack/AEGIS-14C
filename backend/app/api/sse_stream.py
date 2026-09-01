@@ -190,7 +190,7 @@ async def stream_autonomous_triage(
         "agent": "Agent 4: Legal Arbiter",
         "status": "IN_PROGRESS",
         "stage_index": 4,
-        "message": "Synthesizing statutory BNS 2023 offenses & drafting Section 106 BNSS / Section 66D IT Act freeze notices...",
+        "message": "Synthesizing statutory BNS 2023 offenses & drafting Section 94 BNSS / Section 66D IT Act freeze notices...",
         "runtime_ms": round((time.time() - start_time) * 1000, 2)
     })
 
@@ -204,13 +204,13 @@ async def stream_autonomous_triage(
             data=crud.LegalDirectiveCreate(
                 investigation_id=inv["id"],
                 ticket_id=ticket.id,
-                legal_act="Section 106 BNSS / Section 66D IT Act",
+                legal_act="Section 94 BNSS / Section 66D IT Act",
                 target_entity_type="UPI_VPA",
                 target_entity_value=vpa,
                 psp_or_bank=bank_name,
                 action_required="IMMEDIATE_DEBIT_FREEZE",
                 notice_content=(
-                    f"STATUTORY FREEZE DIRECTIVE UNDER SECTION 106 BNSS & SECTION 66D IT ACT\n\n"
+                    f"STATUTORY FREEZE DIRECTIVE UNDER SECTION 94 BNSS & SECTION 66D IT ACT\n\n"
                     f"To: Nodal Grievance & Cyber Law Enforcement Officer, {bank_name}\n"
                     f"Case: Incident Ticket #{ticket.ticket_number} (Ref: I4C / 1930 Helpline Triage)\n"
                     f"Target VPA: {vpa}\n"
@@ -240,7 +240,7 @@ async def stream_autonomous_triage(
         "bns_sections": ticket.bns_sections,
         "threat_severity": ticket.threat_severity,
         "severity_level": ticket.severity_level,
-        "message": f"Drafted {len(created_directives)} Section 106 BNSS bank freeze directive(s). DPDP-compliant ledger updated.",
+        "message": f"Drafted {len(created_directives)} Section 94 BNSS bank freeze directive(s). DPDP-compliant ledger updated.",
         "runtime_ms": total_runtime_ms
     })
     await asyncio.sleep(0.05)

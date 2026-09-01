@@ -331,7 +331,7 @@ class MuleTransactionResponse(BaseModel):
 class LegalDirectiveCreate(BaseModel):
     investigation_id: str
     ticket_id: Optional[str] = None
-    legal_act: str = "Section 106 BNSS / Section 66D IT Act"
+    legal_act: str = "Section 94 BNSS / Section 66D IT Act"
     target_entity_type: str
     target_entity_value: str
     psp_or_bank: str

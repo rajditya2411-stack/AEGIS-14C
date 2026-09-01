@@ -425,13 +425,13 @@ export async function fetchLegalDirectives(invId: string): Promise<LegalDirectiv
 export async function downloadLegalFreezeNoticePDF(invId: string, directiveId?: string): Promise<void> {
   const query = directiveId ? `?directive_id=${encodeURIComponent(directiveId)}` : '';
   const res = await apiFetch(`${API_BASE}/investigations/${invId}/export/legal-notice${query}`);
-  if (!res.ok) throw new Error('Failed to download Section 106 BNSS Freeze Notice PDF');
+  if (!res.ok) throw new Error('Failed to download Section 94 BNSS Freeze Notice PDF');
 
   const blob = await res.blob();
   const url = window.URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `BNSS_106_Freeze_Notice_${invId.substring(0, 8)}.pdf`;
+  a.download = `BNSS_94_Freeze_Notice_${invId.substring(0, 8)}.pdf`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

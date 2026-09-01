@@ -42,13 +42,13 @@ async def test_phase4_legal_notice_and_ledger():
         inv_id = ingest_res["investigation"]["id"]
         ticket = ingest_res["ticket"]
 
-        # Create Section 106 BNSS Freeze Directive
+        # Create Section 94 BNSS Freeze Directive
         directive = await crud.create_legal_directive(
             db=session,
             data=crud.LegalDirectiveCreate(
                 investigation_id=inv_id,
                 ticket_id=ticket.id,
-                legal_act="Section 106 BNSS / Section 66D IT Act",
+                legal_act="Section 94 BNSS / Section 66D IT Act",
                 target_entity_type="UPI_VPA",
                 target_entity_value="cbi.escrow.verification@icici",
                 psp_or_bank="ICICI Bank",
@@ -61,25 +61,25 @@ async def test_phase4_legal_notice_and_ledger():
         await crud.append_audit_ledger_entry(
             db=session,
             investigation_id=inv_id,
-            action_type="STATUTORY_BNSS_106_FREEZE_NOTICE_ISSUED",
+            action_type="STATUTORY_BNSS_94_FREEZE_NOTICE_ISSUED",
             actor="State Cyber Crime Cell Nodal Officer",
             data_payload={
                 "directive_number": directive.directive_number,
                 "target_vpa": "cbi.escrow.verification@icici",
                 "bank": "ICICI Bank",
-                "statutory_act": "Section 106 BNSS"
+                "statutory_act": "Section 94 BNSS"
             },
             ticket_id=ticket.id
         )
 
-        print(f"\n[TEST 1] Testing Section 106 BNSS Legal Freeze Notice PDF Generator...")
+        print(f"\n[TEST 1] Testing Section 94 BNSS Legal Freeze Notice PDF Generator...")
         notice_pdf = await ReportService.generate_legal_freeze_notice_pdf(session, inv_id)
         assert isinstance(notice_pdf, bytes), "Expected PDF bytes output"
         assert notice_pdf.startswith(b"%PDF-"), "Invalid PDF binary header"
         assert len(notice_pdf) > 2000, f"Expected non-empty PDF, got {len(notice_pdf)} bytes"
-        print(f"  ✅ Section 106 BNSS Statutory Freeze Notice PDF generated successfully ({len(notice_pdf):,} bytes).")
+        print(f"  ✅ Section 94 BNSS Statutory Freeze Notice PDF generated successfully ({len(notice_pdf):,} bytes).")
 
-        print(f"\n[TEST 2] Testing Comprehensive AEGIS-I4C Incident Dossier PDF Generator...")
+        print(f"\n[TEST 2] Testing Comprehensive AEGIS-I4C Incident Dossier PDF Generator with Sec 63 BSA Certificate...")
         dossier_pdf = await ReportService.generate_pdf_report(session, inv_id)
         assert isinstance(dossier_pdf, bytes), "Expected PDF bytes output"
         assert dossier_pdf.startswith(b"%PDF-"), "Invalid PDF binary header"
@@ -123,7 +123,7 @@ async def test_phase4_legal_notice_and_ledger():
     assert res_directives.status_code == 200
     dir_data = res_directives.json()
     assert len(dir_data) >= 1
-    assert dir_data[0]["legal_act"] == "Section 106 BNSS / Section 66D IT Act"
+    assert dir_data[0]["legal_act"] == "Section 94 BNSS / Section 66D IT Act"
     print(f"  ✅ GET /api/v1/investigations/{inv_id[:8]}/directives returned {len(dir_data)} directive(s)")
 
     # Test Ledger List

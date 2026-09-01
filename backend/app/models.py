@@ -133,7 +133,7 @@ class LegalDirective(Base):
     directive_number: Mapped[str] = mapped_column(String(50), unique=True, nullable=False, index=True)
     investigation_id: Mapped[str] = mapped_column(String(36), ForeignKey("investigations.id", ondelete="CASCADE"), nullable=False)
     ticket_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("incident_tickets.id", ondelete="CASCADE"), nullable=True)
-    legal_act: Mapped[str] = mapped_column(String(100), default="Section 106 BNSS / Section 66D IT Act")
+    legal_act: Mapped[str] = mapped_column(String(100), default="Section 94 BNSS / Section 66D IT Act")
     target_entity_type: Mapped[str] = mapped_column(String(50), nullable=False)
     target_entity_value: Mapped[str] = mapped_column(String(255), nullable=False)
     psp_or_bank: Mapped[str] = mapped_column(String(100), nullable=False)

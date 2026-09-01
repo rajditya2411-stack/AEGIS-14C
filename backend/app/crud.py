@@ -801,10 +801,10 @@ async def get_mule_transactions(db: AsyncSession, investigation_id: str) -> List
 
 async def create_legal_directive(db: AsyncSession, data: LegalDirectiveCreate) -> LegalDirective:
     rand_suffix = f"{random.randint(1000, 9999)}"
-    directive_num = f"BNSS-106-2026-{rand_suffix}"
+    directive_num = f"BNSS-94-2026-{rand_suffix}"
 
     raw_notice = data.notice_content or (
-        f"STATUTORY FREEZE NOTICE UNDER SECTION 106 BNSS & SECTION 66D IT ACT\n"
+        f"STATUTORY FREEZE NOTICE UNDER SECTION 94 BNSS & SECTION 66D IT ACT\n"
         f"Directive: {directive_num}\n"
         f"Target: {data.target_entity_value} ({data.target_entity_type})\n"
         f"Recipient PSP/Bank: {data.psp_or_bank}\n"

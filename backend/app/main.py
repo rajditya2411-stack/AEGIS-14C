@@ -448,7 +448,7 @@ async def export_legal_freeze_notice_pdf(
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Exports official court-admissible Section 106 BNSS / Section 66D IT Act
+    Exports official court-admissible Section 94 BNSS / Section 66D IT Act
     Statutory Bank Debit Freeze & Lien Order PDF.
     """
     try:
@@ -457,7 +457,7 @@ async def export_legal_freeze_notice_pdf(
             content=pdf_bytes,
             media_type="application/pdf",
             headers={
-                "Content-Disposition": f"attachment; filename=BNSS_106_Freeze_Notice_{inv_id[:8]}.pdf"
+                "Content-Disposition": f"attachment; filename=BNSS_94_Freeze_Notice_{inv_id[:8]}.pdf"
             }
         )
     except ValueError as e:
@@ -587,7 +587,7 @@ async def verify_investigation_ledger_integrity(inv_id: str, db: AsyncSession = 
 
 @app.get("/api/v1/investigations/{inv_id}/directives", response_model=List[LegalDirectiveResponse])
 async def get_investigation_legal_directives(inv_id: str, db: AsyncSession = Depends(get_db)):
-    """Retrieve statutory Section 106 BNSS / Section 66D IT Act freeze directives."""
+    """Retrieve statutory Section 94 BNSS / Section 66D IT Act freeze directives."""
     return await crud.get_legal_directives(db, investigation_id=inv_id)
 
 
