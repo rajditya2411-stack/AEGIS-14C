@@ -22,13 +22,15 @@ from app.schemas import (
     SampleComplaintItem,
     OSINTInspectRequest, OSINTInspectResponse,
     MuleTraceRequest, MuleTraceResponse, MuleIntelCheckResponse, MuleTransactionResponse,
-    AuditLedgerEntryResponse, LegalDirectiveResponse, LedgerVerificationResponse
+    AuditLedgerEntryResponse, LegalDirectiveResponse, LedgerVerificationResponse,
+    BankStatementIngestRequest, BankStatementIngestResponse
 )
 import app.crud as crud
 from app.parsers.complaint_parser import ComplaintParser
 from app.agents.osint_sentinel import OSINTSentinel
 from app.agents.mule_tracer import MuleTracer
 from app.agents.threat_intel_store import ThreatIntelStore
+from app.services.mule_ledger import MuleLedgerEngine
 from app.api.sse_stream import stream_autonomous_triage
 from app.services.auth_service import (
     hash_password, verify_password, create_access_token, get_current_user, get_optional_current_user
@@ -638,6 +640,28 @@ async def trace_mule_transactions(data: MuleTraceRequest, db: AsyncSession = Dep
         ticket_id=data.ticket_id
     )
     return res
+
+
+@app.post("/api/v1/triage/bank-statement-ingest", response_model=BankStatementIngestResponse)
+async def ingest_bank_statement_csv(
+    data: BankStatementIngestRequest,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Ingests raw bank statement CSV (HDFC, SBI, ICICI, Axis, Paytm),
+    computes Section 63 BSA SHA-256 evidence hash, executes NetworkX multi-hop money flow analysis,
+    persists nodes/edges into SQLite graph, and updates tamper-evident audit ledger.
+    """
+    try:
+        result = await MuleLedgerEngine.ingest_csv_and_sync_graph(
+            db=db,
+            investigation_id=data.investigation_id,
+            csv_content=data.csv_content,
+            source_account=data.source_account
+        )
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Bank statement ingestion error: {str(e)}")
 
 
 @app.get("/api/v1/investigations/{inv_id}/transactions", response_model=List[MuleTransactionResponse])

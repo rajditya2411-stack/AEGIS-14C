@@ -20,12 +20,13 @@ import {
   Loader2,
   LogOut,
   Sun,
-  Moon
+  Moon,
+  DollarSign
 } from 'lucide-react';
 import type { Investigation, EntityType } from '../types';
 import { useTheme } from '../context/ThemeContext';
 
-export type NavView = 'workspace' | 'timeline' | 'snapshots';
+export type NavView = 'workspace' | 'mule-ledger' | 'timeline' | 'snapshots';
 
 interface SidebarProps {
   currentView: NavView;
@@ -108,6 +109,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
               title="Workspace Graph"
             >
               <LayoutGrid className="w-4 h-4" />
+            </button>
+
+            <button
+              onClick={() => onSelectNav('mule-ledger')}
+              className={`w-9 h-9 rounded-sm flex items-center justify-center transition-all cursor-pointer ${
+                currentView === 'mule-ledger'
+                  ? isLight ? 'bg-rose-600 text-white font-bold shadow-sm' : 'bg-rose-500 text-white font-bold shadow-sm'
+                  : isLight ? 'text-slate-600 hover:bg-slate-200 hover:text-slate-900' : 'text-zinc-400 hover:bg-[#18181b] hover:text-rose-400'
+              }`}
+              title="Multi-Hop Mule Ledger (Financial Forensics)"
+            >
+              <DollarSign className="w-4 h-4" />
             </button>
 
             <button

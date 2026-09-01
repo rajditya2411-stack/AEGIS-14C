@@ -402,6 +402,20 @@ export async function fetchMuleTransactions(invId: string) {
   return res.json();
 }
 
+export async function ingestBankStatementCSV(invId: string, csvContent: string, sourceAccount?: string) {
+  const res = await apiFetch(`${API_BASE}/triage/bank-statement-ingest`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      investigation_id: invId,
+      csv_content: csvContent,
+      source_account: sourceAccount
+    })
+  });
+  if (!res.ok) throw new Error('Failed to ingest bank statement CSV');
+  return res.json();
+}
+
 export async function fetchAuditLedger(invId: string): Promise<AuditLedgerEntry[]> {
   const res = await apiFetch(`${API_BASE}/investigations/${invId}/ledger`);
   if (!res.ok) throw new Error('Failed to fetch audit ledger');

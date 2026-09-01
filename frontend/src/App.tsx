@@ -6,6 +6,7 @@ import { GraphCanvas } from './components/GraphCanvas';
 import { InspectorDrawer } from './components/InspectorDrawer';
 import { TimelineView } from './components/TimelineView';
 import { SnapshotDiffView } from './components/SnapshotDiffView';
+import { MuleLedgerView } from './components/MuleLedgerView';
 import { NewCaseModal, NewEntityModal } from './components/Modals';
 import { SettingsModal } from './components/SettingsModal';
 import { HelpModal } from './components/HelpModal';
@@ -499,6 +500,13 @@ export function App() {
           onToggleInspector={() => setIsInspectorOpen(!isInspectorOpen)}
           isInspectorOpen={isInspectorOpen}
           agentState={agentState}
+        />
+      )}
+
+      {currentNav === 'mule-ledger' && (
+        <MuleLedgerView
+          activeCase={activeCase}
+          onRefreshCase={() => activeCaseId && loadActiveCaseData(activeCaseId)}
         />
       )}
 

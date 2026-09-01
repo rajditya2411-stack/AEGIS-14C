@@ -443,4 +443,15 @@ class LedgerVerificationResponse(BaseModel):
     entries: List[AuditLedgerEntryResponse]
 
 
+class BankStatementIngestRequest(BaseModel):
+    investigation_id: str
+    csv_content: str
+    source_account: Optional[str] = None
+
+
+class BankStatementIngestResponse(BaseModel):
+    custody_envelope: Dict[str, Any]
+    analysis: Dict[str, Any]
+
+
 
