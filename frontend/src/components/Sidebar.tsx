@@ -21,12 +21,13 @@ import {
   LogOut,
   Sun,
   Moon,
-  DollarSign
+  DollarSign,
+  Scale
 } from 'lucide-react';
 import type { Investigation, EntityType } from '../types';
 import { useTheme } from '../context/ThemeContext';
 
-export type NavView = 'workspace' | 'mule-ledger' | 'timeline' | 'snapshots';
+export type NavView = 'workspace' | 'mule-ledger' | 'directives' | 'timeline' | 'snapshots';
 
 interface SidebarProps {
   currentView: NavView;
@@ -121,6 +122,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
               title="Multi-Hop Mule Ledger (Financial Forensics)"
             >
               <DollarSign className="w-4 h-4" />
+            </button>
+
+            <button
+              onClick={() => onSelectNav('directives')}
+              className={`w-9 h-9 rounded-sm flex items-center justify-center transition-all cursor-pointer ${
+                currentView === 'directives'
+                  ? isLight ? 'bg-indigo-600 text-white font-bold shadow-sm' : 'bg-indigo-600 text-white font-bold shadow-sm'
+                  : isLight ? 'text-slate-600 hover:bg-slate-200 hover:text-slate-900' : 'text-zinc-400 hover:bg-[#18181b] hover:text-indigo-400'
+              }`}
+              title="Directives & Inter-Agency Intel Hub (Section 94 BNSS & I4C)"
+            >
+              <Scale className="w-4 h-4" />
             </button>
 
             <button

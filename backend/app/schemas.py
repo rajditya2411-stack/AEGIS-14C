@@ -519,3 +519,35 @@ class SyndicateProfileResponse(BaseModel):
 
 
 
+
+# --- Phase 5 Schemas: Inter-Agency Intel Exchange & Coordination ---
+class IntelBroadcastRequest(BaseModel):
+    investigation_id: str
+    target_agencies: List[str]
+    broadcaster_officer: Optional[str] = "Inspector AEGIS Cyber Command"
+    custom_notes: Optional[str] = None
+
+
+class IntelBroadcastResponse(BaseModel):
+    success: bool
+    broadcast_id: str
+    investigation_id: str
+    investigation_title: str
+    target: str
+    crime_category: str
+    broadcaster_officer: str
+    broadcast_timestamp: str
+    total_iocs_broadcast: int
+    iocs_breakdown: Dict[str, Any]
+    agency_deliveries: List[Dict[str, Any]]
+    action_required: str
+
+
+class IntelFeedItem(BaseModel):
+    feed_id: str
+    timestamp: str
+    origin_agency: str
+    alert_title: str
+    severity: str
+    iocs: List[str]
+    action: str

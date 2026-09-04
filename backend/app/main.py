@@ -32,6 +32,8 @@ from app.agents.osint_sentinel import OSINTSentinel
 from app.agents.mule_tracer import MuleTracer
 from app.agents.threat_intel_store import ThreatIntelStore
 from app.agents.syndicate_profiler import SyndicateProfiler
+from app.services.intel_exchange import IntelExchangeService
+from app.schemas import IntelBroadcastRequest, IntelBroadcastResponse, IntelFeedItem
 from app.services.mule_ledger import MuleLedgerEngine
 from app.collectors.apk_decompiler import ApkDecompiler
 from app.normalization.cdn_cleaner import CDNCleaner
@@ -836,3 +838,78 @@ async def start_triage_stream_get(
 
 
 
+
+
+# =========================================================================
+# --- Phase 5: Inter-Agency Threat Intel Exchange & Broadcast Endpoints ---
+# =========================================================================
+
+@app.get("/api/v1/intel/broadcasts", response_model=List[IntelFeedItem])
+async def get_inter_agency_broadcast_feeds():
+    """
+    Returns real-time inter-agency threat intelligence bulletin feeds
+    from I4C, CERT-In, Mumbai Cyber Cell, and DoT Sanchar Saathi.
+    """
+    return IntelExchangeService.get_live_intel_feed()
+
+
+@app.post("/api/v1/intel/broadcast", response_model=IntelBroadcastResponse)
+async def broadcast_case_threat_intel(
+    data: IntelBroadcastRequest,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Broadcasts verified case IOCs (Mule Accounts, C2 IPs, Phishing Domains, APKs)
+    to selected partner agencies (I4C, NPCI, CERT-In, DoT, State Police Mesh).
+    """
+    inv = await crud.get_investigation_by_id(db, data.investigation_id)
+    if not inv:
+        raise HTTPException(status_code=404, detail="Investigation not found")
+
+    entities = await crud.get_entities_by_investigation(db, data.investigation_id)
+    
+    # Also log to audit ledger
+    await crud.append_audit_ledger_entry(
+        db=db,
+        investigation_id=data.investigation_id,
+        action_type="INTER_AGENCY_INTEL_BROADCAST",
+        actor=data.broadcaster_officer or "AEGIS-CYBER-OFFICER",
+        data_payload={
+            "target_agencies": data.target_agencies,
+            "total_iocs": len(entities),
+            "custom_notes": data.custom_notes
+        }
+    )
+
+    return IntelExchangeService.broadcast_indicators(
+        investigation_id=inv.id,
+        investigation_title=inv.title,
+        target=inv.target,
+        crime_category=inv.type,
+        entities=entities,
+        target_agencies=data.target_agencies,
+        broadcaster_officer=data.broadcaster_officer or "Inspector AEGIS Cyber Command"
+    )
+
+
+@app.get("/api/v1/investigations/{inv_id}/export/stix")
+async def export_investigation_stix_package(
+    inv_id: str,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Exports the investigation knowledge graph as a standardized STIX 2.1 Threat Intel bundle.
+    """
+    inv = await crud.get_investigation_by_id(db, inv_id)
+    if not inv:
+        raise HTTPException(status_code=404, detail="Investigation not found")
+
+    entities = await crud.get_entities_by_investigation(db, inv_id)
+    relationships = await crud.get_relationships_by_investigation(db, inv_id)
+
+    stix_bundle = IntelExchangeService.generate_stix_package(
+        investigation=inv,
+        entities=entities,
+        relationships=relationships
+    )
+    return stix_bundle

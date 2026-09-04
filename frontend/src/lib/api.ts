@@ -15,7 +15,7 @@ import type {
   IncidentTicket
 } from '../types';
 
-let rawBase = import.meta.env.VITE_API_BASE || 'http://127.0.0.1:8000/api/v1';
+let rawBase = import.meta.env.VITE_API_BASE || 'http://localhost:8000/api/v1';
 if (rawBase && !rawBase.endsWith('/api/v1') && !rawBase.endsWith('/api/v1/')) {
   rawBase = rawBase.replace(/\/$/, '') + '/api/v1';
 }
@@ -584,4 +584,61 @@ export async function fetchSyndicateProfile(invId: string) {
   if (!res.ok) throw new Error('Failed to fetch syndicate profile');
   return res.json();
 }
+
+// --- Phase 5: Intel Exchange & Comprehensive Dossier Export ---
+
+export interface IntelFeedItem {
+  feed_id: string;
+  timestamp: string;
+  origin_agency: string;
+  alert_title: string;
+  severity: string;
+  iocs: string[];
+  action: string;
+}
+
+export interface IntelBroadcastPayload {
+  investigation_id: string;
+  target_agencies: string[];
+  broadcaster_officer?: string;
+  custom_notes?: string;
+}
+
+export async function fetchIntelBroadcastFeeds(): Promise<IntelFeedItem[]> {
+  const res = await apiFetch(`${API_BASE}/intel/broadcasts`);
+  if (!res.ok) throw new Error('Failed to fetch inter-agency broadcast feeds');
+  return res.json();
+}
+
+export async function broadcastThreatIntel(payload: IntelBroadcastPayload) {
+  const res = await apiFetch(`${API_BASE}/intel/broadcast`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error('Failed to broadcast threat intelligence');
+  return res.json();
+}
+
+export async function fetchStixPackage(invId: string) {
+  const res = await apiFetch(`${API_BASE}/investigations/${invId}/export/stix`);
+  if (!res.ok) throw new Error('Failed to export STIX 2.1 threat bundle');
+  return res.json();
+}
+
+export async function downloadInvestigationDossierPDF(invId: string): Promise<void> {
+  const res = await apiFetch(`${API_BASE}/investigations/${invId}/export/pdf`);
+  if (!res.ok) throw new Error('Failed to download Forensic Incident Dossier PDF');
+
+  const blob = await res.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `AEGIS_Forensic_Dossier_${invId.substring(0, 8)}.pdf`;
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+}
+
 
