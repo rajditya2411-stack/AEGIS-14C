@@ -23,7 +23,8 @@ import {
   Download,
   FileCheck,
   ExternalLink,
-  ShieldCheck
+  ShieldCheck,
+  Compass
 } from 'lucide-react';
 import type { 
   Entity, 
@@ -92,7 +93,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
 }) => {
   const { theme } = useTheme();
   const isLight = theme === 'light';
-  const [activeTab, setActiveTab] = useState<'details' | 'relationship' | 'legal' | 'ledger' | 'notes'>('details');
+  const [activeTab, setActiveTab] = useState<'details' | 'relationship' | 'legal' | 'ledger' | 'syndicate' | 'notes'>('details');
 
   // PDF Export States
   const [isExportingPDF, setIsExportingPDF] = useState(false);
@@ -103,6 +104,10 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
   const [auditLedger, setAuditLedger] = useState<AuditLedgerEntry[]>([]);
   const [verificationResult, setVerificationResult] = useState<LedgerVerificationResponse | null>(null);
   const [isVerifyingLedger, setIsVerifyingLedger] = useState(false);
+
+  // Phase 4 Syndicate Profile State
+  const [syndicateProfile, setSyndicateProfile] = useState<any | null>(null);
+  const [isLoadingSyndicate, setIsLoadingSyndicate] = useState(false);
 
   // Relationship creation state
   const [targetEntityId, setTargetEntityId] = useState<string>('');
@@ -118,18 +123,20 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
   const [editNoteTitle, setEditNoteTitle] = useState('');
   const [editNoteContent, setEditNoteContent] = useState('');
 
-  // Load Legal Directives & Ledger for active case
+  // Load Legal Directives, Ledger & Syndicate Profile for active case
   const loadCaseLegalData = useCallback(async (invId: string) => {
     try {
-      const [directives, ledger] = await Promise.all([
+      const [directives, ledger, syn] = await Promise.all([
         api.fetchLegalDirectives(invId).catch(() => []),
-        api.fetchAuditLedger(invId).catch(() => [])
+        api.fetchAuditLedger(invId).catch(() => []),
+        api.fetchSyndicateProfile(invId).catch(() => null)
       ]);
       setLegalDirectives(directives);
       setAuditLedger(ledger);
+      setSyndicateProfile(syn);
       setVerificationResult(null);
     } catch (err) {
-      console.error('Failed to load legal/ledger data:', err);
+      console.error('Failed to load legal/ledger/syndicate data:', err);
     }
   }, []);
 
@@ -293,6 +300,16 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
           }`}
         >
           <Lock className={`w-3 h-3 ${isLight ? 'text-emerald-600' : 'text-emerald-400'}`} /> Ledger ({auditLedger.length})
+        </button>
+        <button
+          onClick={() => setActiveTab('syndicate')}
+          className={`px-3 py-2.5 font-bold border-b-2 flex items-center gap-1 transition cursor-pointer whitespace-nowrap ${
+            activeTab === 'syndicate'
+              ? isLight ? 'border-slate-900 text-slate-900 bg-white' : 'border-stone-200 text-white bg-[#121214]'
+              : isLight ? 'border-transparent text-slate-600 hover:text-slate-900' : 'border-transparent text-zinc-400 hover:text-zinc-200'
+          }`}
+        >
+          <Compass className={`w-3 h-3 ${isLight ? 'text-rose-600' : 'text-rose-400'}`} /> Syndicate MO
         </button>
         <button
           onClick={() => setActiveTab('notes')}
@@ -702,6 +719,67 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                 ))}
               </div>
             )}
+          </div>
+        )}
+
+        {/* TAB 4.5: SYNDICATE MO PROFILER */}
+        {activeTab === 'syndicate' && (
+          <div className="space-y-4 font-mono text-xs">
+            <div className={`p-3 rounded-sm border space-y-2 ${
+              isLight ? 'bg-[#f8fafc] border-slate-200' : 'bg-[#121214] border-[#27272a]'
+            }`}>
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-rose-400 flex items-center gap-1.5">
+                  <Compass className="w-3.5 h-3.5" /> Syndicate Attribution
+                </span>
+                {syndicateProfile && (
+                  <span className="px-2 py-0.5 rounded-sm bg-rose-500/20 text-rose-400 text-[10px] font-bold border border-rose-500/30">
+                    {syndicateProfile.confidence_score}% Match
+                  </span>
+                )}
+              </div>
+
+              {syndicateProfile ? (
+                <div className="space-y-3 pt-1">
+                  <div>
+                    <span className="text-[10px] text-zinc-500 block uppercase font-bold">Identified Syndicate:</span>
+                    <h3 className="text-sm font-bold text-zinc-100">{syndicateProfile.syndicate_name}</h3>
+                    <span className="text-[10px] text-rose-400 block">📍 {syndicateProfile.epicenter}</span>
+                  </div>
+
+                  <div className="p-2 rounded-sm bg-[#07080f] border border-[#27272a] text-[11px] text-zinc-300">
+                    <span className="text-zinc-500 block text-[9px] uppercase font-bold mb-0.5">Primary Modus Operandi:</span>
+                    <p>{syndicateProfile.primary_mo}</p>
+                  </div>
+
+                  <div>
+                    <span className="text-[10px] text-zinc-500 block uppercase font-bold mb-1">Statutory Penal Violations:</span>
+                    <div className="space-y-1">
+                      {syndicateProfile.statutory_violations?.map((viol: string, i: number) => (
+                        <div key={i} className="px-2 py-1 rounded-sm bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-[10px]">
+                          ⚖️ {viol}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="text-[10px] text-zinc-500 block uppercase font-bold mb-1">Recommended Countermeasures:</span>
+                    <div className="space-y-1">
+                      {syndicateProfile.recommended_countermeasures?.map((cm: string, i: number) => (
+                        <div key={i} className="px-2 py-1 rounded-sm bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-[10px]">
+                          🛡️ {cm}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-6 text-zinc-500 text-xs">
+                  <p>No syndicate signature detected yet. Seed complaint text or APK binary to profile criminal cartel.</p>
+                </div>
+              )}
+            </div>
           </div>
         )}
 

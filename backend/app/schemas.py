@@ -454,4 +454,68 @@ class BankStatementIngestResponse(BaseModel):
     analysis: Dict[str, Any]
 
 
+# --- Phase 3 & 4 Schemas ---
+class ApkUploadResponse(BaseModel):
+    success: bool
+    filename: str
+    package_name: str
+    malware_family: str
+    threat_risk_score: int
+    threat_tags: List[str]
+    dangerous_permissions: List[Dict[str, Any]]
+    c2_urls: List[str]
+    c2_ips: List[str]
+    telegram_bots: List[str]
+    telegram_chats: List[str]
+    extracted_phones: List[str]
+    custody_envelope: Dict[str, Any]
+    graph_sync: Optional[Dict[str, Any]] = None
+
+
+class CDNCleanResponse(BaseModel):
+    success: bool
+    message: str
+    details: Dict[str, Any]
+
+
+class VisionOCREquest(BaseModel):
+    investigation_id: Optional[str] = None
+    image_base64: str
+    filename: Optional[str] = "evidence.jpg"
+    evidence_type: Optional[str] = "COMPLAINT_FIR"
+
+
+class VisionOCRResponse(BaseModel):
+    success: bool
+    complainant_name: Optional[str] = None
+    complainant_phone: Optional[str] = None
+    defrauded_amount_inr: Optional[int] = None
+    suspect_upi_vpas: List[str] = []
+    suspect_bank_accounts: List[str] = []
+    suspect_ifsc_codes: List[str] = []
+    suspect_phone_numbers: List[str] = []
+    transaction_utrs: List[str] = []
+    phishing_urls: List[str] = []
+    scam_narrative: str
+    scam_category: str
+    confidence_score: int
+    custody_envelope: Dict[str, Any]
+    analysis_method: str
+    filename: str
+    evidence_type: str
+
+
+class SyndicateProfileResponse(BaseModel):
+    investigation_id: str
+    matched_syndicate_id: str
+    confidence_score: int
+    syndicate_name: str
+    epicenter: str
+    primary_mo: str
+    statutory_violations: List[str]
+    matched_indicators: List[str]
+    recommended_countermeasures: List[str]
+    all_syndicate_rankings: List[Dict[str, Any]]
+
+
 

@@ -25,7 +25,10 @@ import {
   Scale,
   Download,
   Sun,
-  Moon
+  Moon,
+  Smartphone,
+  Eye,
+  Filter
 } from 'lucide-react';
 import { CustomEntityNode } from './CustomEntityNode';
 import type { Investigation, EntityType } from '../types';
@@ -52,6 +55,9 @@ interface GraphCanvasProps {
   onSelectNode: (nodeId: string | null) => void;
   onOpenNewEntityModal: () => void;
   onOpenComplaintModal?: () => void;
+  onOpenApkModal?: () => void;
+  onOpenVisionModal?: () => void;
+  onCleanCdn?: () => void;
   selectedEntityFilters: EntityType[];
   isScanning?: boolean;
   onTriggerScan: () => void;
@@ -71,6 +77,9 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
   onSelectNode,
   onOpenNewEntityModal,
   onOpenComplaintModal,
+  onOpenApkModal,
+  onOpenVisionModal,
+  onCleanCdn,
   selectedEntityFilters,
   isScanning = false,
   onTriggerScan,
@@ -347,6 +356,54 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
             >
               <Scale className={`w-3.5 h-3.5 ${isLight ? 'text-indigo-700' : 'text-indigo-300'}`} />
               <span>Sec 94 Notice</span>
+            </button>
+          )}
+
+          {/* Phase 3: Static APK Decompiler */}
+          {onOpenApkModal && (
+            <button
+              onClick={onOpenApkModal}
+              className={`flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-sm transition shadow-sm cursor-pointer border ${
+                isLight
+                  ? 'bg-pink-50 hover:bg-pink-100 text-pink-900 border-pink-300'
+                  : 'bg-pink-950/80 hover:bg-pink-900/90 text-pink-200 border-pink-500/40'
+              }`}
+              title="Decompile Android Banking Trojan or Electricity Update APK"
+            >
+              <Smartphone className={`w-3.5 h-3.5 ${isLight ? 'text-pink-600' : 'text-pink-300'}`} />
+              <span>APK Decompiler</span>
+            </button>
+          )}
+
+          {/* Phase 4: Multi-Modal Vision OCR */}
+          {onOpenVisionModal && (
+            <button
+              onClick={onOpenVisionModal}
+              className={`flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-sm transition shadow-sm cursor-pointer border ${
+                isLight
+                  ? 'bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border-indigo-300'
+                  : 'bg-indigo-950/80 hover:bg-indigo-900/90 text-indigo-200 border-indigo-500/40'
+              }`}
+              title="Extract Financial Evidence from Handwritten FIR, WhatsApp Chat, or Bank Slip"
+            >
+              <Eye className={`w-3.5 h-3.5 ${isLight ? 'text-indigo-700' : 'text-indigo-300'}`} />
+              <span>Vision OCR</span>
+            </button>
+          )}
+
+          {/* Phase 3: Clean CDN Proxy Clutter */}
+          {onCleanCdn && activeCase && (
+            <button
+              onClick={onCleanCdn}
+              className={`flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-sm transition shadow-sm cursor-pointer border ${
+                isLight
+                  ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border-emerald-300'
+                  : 'bg-emerald-950/80 hover:bg-emerald-900/90 text-emerald-200 border-emerald-500/40'
+              }`}
+              title="Prune Cloudflare / Akamai CDN Proxy Hairball Nodes"
+            >
+              <Filter className={`w-3.5 h-3.5 ${isLight ? 'text-emerald-700' : 'text-emerald-300'}`} />
+              <span>Clean CDN</span>
             </button>
           )}
 

@@ -13,6 +13,8 @@ import { HelpModal } from './components/HelpModal';
 import { AuthScreen } from './components/AuthScreen';
 import { AIChatPanel } from './components/AIChatPanel';
 import { ComplaintIntakeModal } from './components/ComplaintIntakeModal';
+import { ApkUploadModal } from './components/ApkUploadModal';
+import { EvidenceOcrModal } from './components/EvidenceOcrModal';
 import type { AgentStageState } from './components/GraphCanvas';
 import type { Investigation, Entity, Relationship, Note, EntityType, ConfidenceLevel, User } from './types';
 import * as api from './lib/api';
@@ -47,6 +49,8 @@ export function App() {
     isStreaming: false
   });
   const [isComplaintModalOpen, setIsComplaintModalOpen] = useState(false);
+  const [isApkModalOpen, setIsApkModalOpen] = useState(false);
+  const [isVisionModalOpen, setIsVisionModalOpen] = useState(false);
 
   // Selection & UI State
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
@@ -492,6 +496,18 @@ export function App() {
           }}
           onOpenNewEntityModal={() => setIsNewEntityModalOpen(true)}
           onOpenComplaintModal={() => setIsComplaintModalOpen(true)}
+          onOpenApkModal={() => setIsApkModalOpen(true)}
+          onOpenVisionModal={() => setIsVisionModalOpen(true)}
+          onCleanCdn={async () => {
+            if (!activeCaseId) return;
+            try {
+              const res = await api.cleanCdnClutter(activeCaseId);
+              alert(`Anti-Hairball: ${res.message}`);
+              await loadActiveCaseData(activeCaseId);
+            } catch (err: any) {
+              alert(`Error cleaning CDN: ${err.message}`);
+            }
+          }}
           selectedEntityFilters={selectedEntityFilters}
           isScanning={isScanning}
           onTriggerScan={handleTriggerScan}
@@ -551,6 +567,18 @@ export function App() {
         onClose={() => setIsComplaintModalOpen(false)}
         onRunTriage={handleRunAutonomousTriage}
         isStreaming={agentState.isStreaming}
+      />
+      <ApkUploadModal
+        isOpen={isApkModalOpen}
+        onClose={() => setIsApkModalOpen(false)}
+        activeCase={activeCase}
+        onSuccess={() => activeCaseId && loadActiveCaseData(activeCaseId)}
+      />
+      <EvidenceOcrModal
+        isOpen={isVisionModalOpen}
+        onClose={() => setIsVisionModalOpen(false)}
+        activeCase={activeCase}
+        onSuccess={() => activeCaseId && loadActiveCaseData(activeCaseId)}
       />
       <NewCaseModal
         isOpen={isNewCaseModalOpen}

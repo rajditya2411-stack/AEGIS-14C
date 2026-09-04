@@ -23,14 +23,19 @@ from app.schemas import (
     OSINTInspectRequest, OSINTInspectResponse,
     MuleTraceRequest, MuleTraceResponse, MuleIntelCheckResponse, MuleTransactionResponse,
     AuditLedgerEntryResponse, LegalDirectiveResponse, LedgerVerificationResponse,
-    BankStatementIngestRequest, BankStatementIngestResponse
+    BankStatementIngestRequest, BankStatementIngestResponse,
+    ApkUploadResponse, CDNCleanResponse, VisionOCREquest, VisionOCRResponse, SyndicateProfileResponse
 )
 import app.crud as crud
 from app.parsers.complaint_parser import ComplaintParser
 from app.agents.osint_sentinel import OSINTSentinel
 from app.agents.mule_tracer import MuleTracer
 from app.agents.threat_intel_store import ThreatIntelStore
+from app.agents.syndicate_profiler import SyndicateProfiler
 from app.services.mule_ledger import MuleLedgerEngine
+from app.collectors.apk_decompiler import ApkDecompiler
+from app.normalization.cdn_cleaner import CDNCleaner
+from app.services.vision_ocr import VisionOCREngine
 from app.api.sse_stream import stream_autonomous_triage
 from app.services.auth_service import (
     hash_password, verify_password, create_access_token, get_current_user, get_optional_current_user
@@ -41,7 +46,9 @@ from app.services.timeline_service import TimelineService
 from app.services.ai_config import get_public_settings, save_settings
 from app.services.ai_service import AIService
 from app.services.report_service import ReportService
+from fastapi import UploadFile, File
 from pydantic import BaseModel as PydanticBase
+import base64
 
 orchestrator = ScanOrchestrator()
 
@@ -674,6 +681,97 @@ async def get_investigation_transactions(inv_id: str, db: AsyncSession = Depends
 async def check_vpa_threat_intel(vpa: str):
     """Checks whether a given UPI VPA is in the I4C known mule blacklist database."""
     return ThreatIntelStore.check_mule_account(vpa)
+
+
+# =========================================================================
+# --- Phase 3 & 4: Malware APK, Anti-Hairball, Vision OCR & Syndicate Profiler ---
+# =========================================================================
+
+@app.post("/api/v1/triage/apk-decompile", response_model=ApkUploadResponse)
+async def decompile_malware_apk(
+    file: UploadFile = File(...),
+    investigation_id: Optional[str] = Query(None),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Statically decompiles Android packages (.apk), parses AndroidManifest and DEX bytecode,
+    extracts C2 domains, Telegram Bot Tokens, exfiltration phone numbers, and computes
+    Section 63 BSA evidence hash envelope.
+    """
+    try:
+        apk_bytes = await file.read()
+        analysis = ApkDecompiler.analyze_apk_bytes(apk_bytes, filename=file.filename or "sample.apk")
+        
+        graph_sync = None
+        if investigation_id and analysis.get("success"):
+            graph_sync = await ApkDecompiler.ingest_apk_and_seed_graph(
+                db=db,
+                investigation_id=investigation_id,
+                analysis_result=analysis
+            )
+        
+        analysis["graph_sync"] = graph_sync
+        return analysis
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"APK decompilation failed: {str(e)}")
+
+
+@app.post("/api/v1/investigations/{inv_id}/anti-hairball/clean", response_model=CDNCleanResponse)
+async def clean_investigation_cdn_clutter(
+    inv_id: str,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Identifies shared CDN/Anycast proxy IPs (Cloudflare, Akamai, CloudFront) that create
+    graph hairball clutter, clustering proxy nodes and highlighting true origin infrastructure.
+    """
+    try:
+        return await CDNCleaner.prune_cdn_hairball(db, inv_id)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Anti-hairball cleaning failed: {str(e)}")
+
+
+@app.post("/api/v1/triage/vision-ocr", response_model=VisionOCRResponse)
+async def parse_evidence_vision_ocr(
+    data: VisionOCREquest,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Ingests photos of handwritten FIRs, WhatsApp scam chats, or UPI debit screenshots.
+    Extracts structured IOCs (Victim, Accused, VPAs, Bank accounts, Defrauded amounts)
+    and generates Section 63 BSA chain-of-custody certificates.
+    """
+    try:
+        # Decode base64 image
+        raw_b64 = data.image_base64
+        if "," in raw_b64:
+            raw_b64 = raw_b64.split(",", 1)[1]
+        img_bytes = base64.b64decode(raw_b64)
+        
+        result = await VisionOCREngine.parse_evidence_image(
+            image_bytes=img_bytes,
+            filename=data.filename or "evidence.jpg",
+            evidence_type=data.evidence_type or "COMPLAINT_FIR"
+        )
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Vision OCR evidence parsing failed: {str(e)}")
+
+
+@app.get("/api/v1/investigations/{inv_id}/syndicate-profile", response_model=SyndicateProfileResponse)
+async def get_investigation_syndicate_profile(
+    inv_id: str,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Profiles the active investigation against known cybercrime syndicate signatures
+    (Jamtara APK KYC, Mewat OLX/Sextortion, Southeast Asia Cyber Slavery, Chinese Loan Apps)
+    and returns statutory violations and actionable countermeasures.
+    """
+    try:
+        return await SyndicateProfiler.profile_investigation_syndicate(db, inv_id)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Syndicate profiling failed: {str(e)}")
 
 
 # =========================================================================

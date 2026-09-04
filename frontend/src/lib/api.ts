@@ -539,3 +539,49 @@ export async function streamAutonomousTriage(
   };
 }
 
+// --- Phase 3 & 4 Frontend API Client Methods ---
+
+export async function decompileApkFile(formData: FormData, invId?: string) {
+  const query = invId ? `?investigation_id=${encodeURIComponent(invId)}` : '';
+  const token = getAuthToken();
+  const headers: Record<string, string> = {};
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const res = await fetch(`${API_BASE}/triage/apk-decompile${query}`, {
+    method: 'POST',
+    headers,
+    body: formData
+  });
+  if (!res.ok) throw new Error('Failed to decompile APK file');
+  return res.json();
+}
+
+export async function cleanCdnClutter(invId: string) {
+  const res = await apiFetch(`${API_BASE}/investigations/${invId}/anti-hairball/clean`, {
+    method: 'POST'
+  });
+  if (!res.ok) throw new Error('Failed to clean CDN clutter');
+  return res.json();
+}
+
+export async function parseEvidenceVisionOCR(payload: {
+  image_base64: string;
+  filename?: string;
+  evidence_type?: string;
+  investigation_id?: string;
+}) {
+  const res = await apiFetch(`${API_BASE}/triage/vision-ocr`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error('Failed to parse evidence image via Vision OCR');
+  return res.json();
+}
+
+export async function fetchSyndicateProfile(invId: string) {
+  const res = await apiFetch(`${API_BASE}/investigations/${invId}/syndicate-profile`);
+  if (!res.ok) throw new Error('Failed to fetch syndicate profile');
+  return res.json();
+}
+
